@@ -46,9 +46,9 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 ```{r}
 #| label: read-in-wellcome-data-2018
-# I have the data not stored in this folder because it's too large for GitHub
-# read in 2018 data
-wgm18 <- read_excel("/Users/hannahpawig/Desktop/Cal Poly R Projects/STAT541/data/data-lab3/wgm2018-dataset-crosstabs-all-countries.xlsx",
+
+wgm18 <- read_excel(path = here("data", 
+                    "wgm2018-dataset-crosstabs-all-countries.xlsx"),
   sheet = "Crosstabs all countries",
   skip = 2, 
   col_names = TRUE) |> 
@@ -67,14 +67,16 @@ wd_q25<- wgm18 |>
     question == "Q25 Do you strongly or somewhat agree, strongly or somewhat disagree or neither agree nor disagree with the following statement? Vaccines are safe."
   )
 
-full_df_2018 <- read_excel(path = "/Users/hannahpawig/Desktop/Cal Poly R Projects/STAT541/data/data-lab3/wgm2018-dataset-crosstabs-all-countries.xlsx",
+full_df_2018 <- read_excel(path = here ("data",
+                                        "wgm2018-dataset-crosstabs-all-countries.xlsx"),
                               sheet = "Full dataset",
                               skip = 0,
                               col_names = TRUE)
 
 
 # Read in 2018 data dictionary
-data_dict <- read_excel(path = "/Users/hannahpawig/Desktop/Cal Poly R Projects/STAT541/data/data-lab3/wgm2018-dataset-crosstabs-all-countries.xlsx",
+data_dict <- read_excel(path = here("data",
+                                    "wgm2018-dataset-crosstabs-all-countries.xlsx"),
                               sheet = "Data dictionary",
                               skip = 0,
                               col_names = TRUE) |> 
@@ -144,15 +146,16 @@ regions_codes <- data_dict |>
 #| message: false
 
 # read in 2020 crosstab data
-wgm20 <- read_excel(path = 
-                      "/Users/hannahpawig/Desktop/Cal Poly R Projects/STAT541/data/data-lab3/wgm2020-mentalhealthmodule-crossnational-tabs.xlsx",
+wgm20 <- read_excel(path = here("data",
+                                "wgm2020-mentalhealthmodule-crossnational-tabs.xlsx"),
   sheet = "Socio-economic & demographic",
   skip = 2, 
   col_names = TRUE) |> 
   janitor::clean_names()
 
 # Read in 2020 file
-wgm_full_df <- read_csv("~/Desktop/Cal Poly R Projects/STAT541/data/data-lab3/wgm_full_wave2_public_file_final (1)_csv.csv")
+wgm_full_df <- read_csv(path = here("data",
+                               "wgm_full_wave2_public_file_final (1)_csv.csv"))
 
 ```
 
