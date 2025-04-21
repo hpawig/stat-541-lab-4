@@ -1,0 +1,4 @@
+- source: lab-3.qmd
+  quarto-pub:
+    - id: 07c01b5c-874d-49be-b2f2-437c77753def
+      url: https://hpawig.quarto.pub/lab-3-13f4
