@@ -506,8 +506,8 @@ q6_8_data <- q6_8_data |>
 medians <- q6_8_data |> 
   filter(region != "World") |>
   summarize(
-    Q6 = median(Q6, na.rm = TRUE),
-    Q8 = median(Q8, na.rm = TRUE)
+    Q6 = 100*median(Q6, na.rm = TRUE),
+    Q8 = 100*median(Q8, na.rm = TRUE)
   ) |> as_tibble(
     rownames = "median",
     colnames = c("Q6", "Q8")
@@ -529,18 +529,23 @@ pal <- paletteer_dynamic("cartography::orange.pal",
 
 
 plot <- q6_8_data |> 
-  mutate(isWorld = ifelse(country == "World", TRUE, FALSE)) |>
+  # create a Boolean for the world observation
+  mutate(isWorld = ifelse(country == "World", TRUE, FALSE),
+         # mutate proportions so that percentage tooltip labels show as whole #s
+         Q6 = 100*Q6,
+         Q8 = 100*Q8) |>
   ggplot(mapping = aes(
     x = Q8,
     y = Q6,
     color = region,
+    shape = isWorld,
     label = country,
-    size = isWorld,
+    # World has a unique label
     text = ifelse(
       isWorld == FALSE,
-      paste0("x:", Q8, "<br>y: ", Q6, "<br>Country: ",
+      paste0(Q8, "% said interested <br>", Q6, "% actually sought information<br>Country: ",
              country, "<br>Region: ",region),
-      paste0("Worldwide<br>x: ", Q8, "<br>y: ", Q6)
+      paste0("Worldwide<br>", Q8, "% are interested<br>", Q6, "% actually sought information")
     ))) +
   geom_jitter() +
   labs(
@@ -559,29 +564,29 @@ plot <- q6_8_data |>
     axis.ticks.y = element_blank()
   ) +
   scale_x_continuous(
-    labels = scales::percent_format(scale = 100),
-    breaks = seq(0, 1, by = 0.25),
-    limits = c(0,1)
+    labels = scales::percent_format(scale = 1),
+    breaks = seq(0, 100, by = 25),
+    limits = c(0,100)
   ) +
   
   scale_y_continuous(
-    labels = scales::percent_format(scale = 100),
-    breaks = seq(0, 1, by = 0.25),
-    limits = c(0,1)
+    labels = scales::percent_format(scale = 1),
+    breaks = seq(0, 100, by = 25),
+    limits = c(0,100)
   ) +
   
   scale_color_manual(values = pal) +
-  coord_cartesian(xlim=c(0,1), ylim=c(0,1)) +
+  scale_shape_manual(values = c(16, 22)) + # circle and asterik shapes
   # add median vertical and horizontal lines
   geom_hline(yintercept = medians$Q6, linetype = "dashed", color = "black") +
   geom_vline(xintercept = medians$Q8, linetype = "dashed", color = "black") +
   annotate(
-    "text", x = medians$Q8 + 0.12, y = 0, 
-    label = paste0("Median: ", 100*medians$Q8, "%"), size = 4, color = "black"
+    "text", x = medians$Q8 + 12, y = 0, 
+    label = paste0("Median: ", medians$Q8, "%"), size = 4, color = "black"
     ) +
     annotate(
-    "text", y = medians$Q6 + 0.05, x = 0.04, 
-    label = paste0("Median: ", 100*medians$Q6,"%"), size = 4, color = "black"
+    "text", y = medians$Q6 + 5, x = 4, 
+    label = paste0("Median: ", medians$Q6,"%"), size = 4, color = "black"
     )
 
 
@@ -597,9 +602,9 @@ plotly_plot
 
 ### Row 2 - Background {height="30%"}
 
-This scatterplot is a remake of Chart 2.15 in the 2018 Wellcome Global Monitor Report titled, "Scatterplot exploring interest in science by those who have sought information."
-
-The y-axis shows the percentage of people who are interested in health, disease, or medicine and this information was gauged using the survey question 6: "Have you, personally, tried to get any information about science in the past 30 days?". The x-axis shows the percentage of people who are interested in science (survey question 8: "Would you, personally, like to know more about science?"). The median values for each question are shown as dashed lines. The countries are colored by region and the size of the point is larger for the worldwide data point. The tooltip shows the country name and percentage when hovering over a point.
+::: {.card title="Worldwide Science Interest" padding="3px"}
+In 2018, the worldwide interest in science **69%** of people said they were interested in science, while **31%** of people said they sought information about science in the last 30 days. There seems to be a large discrepancy between those who are interested in science and those who actually attempt to find more information about science.
+:::
 
 ## Column 2 - 2018 Scatterplot about countries' interest in Health, Medicine, and Disease
 
@@ -701,8 +706,8 @@ health_interest <- health_interest |>
 medians <- health_interest |> 
   filter(region != "World") |>
   summarize(
-    Q7 = median(Q7, na.rm = TRUE),
-    Q9 = median(Q9, na.rm = TRUE)
+    Q7 = 100*median(Q7, na.rm = TRUE),
+    Q9 = 100*median(Q9, na.rm = TRUE)
   ) |> as_tibble(
     rownames = "median",
     colnames = c("Q7", "Q9")
@@ -717,22 +722,24 @@ medians <- health_interest |>
 
 # source for palette: https://r-charts.com/color-palettes/#dynamic
 pal <- paletteer_dynamic("cartography::orange.pal",
-                         length(unique(q6_8_data$region)))
+                         length(unique(health_interest$region)))
 
 
 plot <- health_interest |> 
-  mutate(isWorld = ifelse(country == "World", TRUE, FALSE)) |>
+  mutate(isWorld = ifelse(country == "World", TRUE, FALSE),
+         Q7 = Q7*100,
+         Q9 = Q9*100) |>
   ggplot(mapping = aes(
     x = Q9,
     y = Q7,
     color = region,
     label = country,
-    size = isWorld,
+    shape = isWorld,
     text = ifelse(
       isWorld == FALSE,
-      paste0("x:", Q9, "<br>y: ", Q7, "<br>Country: ",
+      paste0(Q9, "% said interested <br>", Q7, "% actually sought information<br>Country: ",
              country, "<br>Region: ",region),
-      paste0("Worldwide<br>x: ", Q9, "<br>y: ", Q7)
+      paste0("Worldwide<br>", Q9, "% are interested <br>", Q7, "% actually sought information")
     ))) +
   geom_jitter() +
   labs(
@@ -751,29 +758,29 @@ plot <- health_interest |>
     axis.ticks.y = element_blank()
   ) +
   scale_x_continuous(
-    labels = scales::percent_format(scale = 100),
-    breaks = seq(0, 1, by = 0.25),
-    limits = c(0,1)
+    labels = scales::percent_format(scale = 1),
+    breaks = seq(0, 100, by = 25),
+    limits = c(0,100)
   ) +
   
   scale_y_continuous(
-    labels = scales::percent_format(scale = 100),
-    breaks = seq(0, 1, by = 0.25),
-    limits = c(0,1)
+    labels = scales::percent_format(scale = 1),
+    breaks = seq(0, 100, by = 25),
+    limits = c(0,100)
   ) +
   
   scale_color_manual(values = pal) +
-  coord_cartesian(xlim=c(0,1), ylim=c(0,1)) +
+  scale_shape_manual(values = c(16, 22)) + # circle and asterik shapes
   # add median vertical and horizontal lines
   geom_hline(yintercept = medians$Q7, linetype = "dashed", color = "black") +
   geom_vline(xintercept = medians$Q9, linetype = "dashed", color = "black") +
   annotate(
-    "text", x = medians$Q9 + 0.12, y = 0, 
-    label = paste0("Median: ", 100*medians$Q9, "%"), size = 4, color = "black"
+    "text", x = medians$Q9 + 12, y = 0, 
+    label = paste0("Median: ", medians$Q9, "%"), size = 4, color = "black"
     ) +
     annotate(
-    "text", y = medians$Q7 + 0.05, x = 0.04, 
-    label = paste0("Median: ", 100*medians$Q7,"%"), size = 4, color = "black"
+    "text", y = medians$Q7 + 5, x = 4, 
+    label = paste0("Median: ", medians$Q7,"%"), size = 4, color = "black"
     )
 
 
@@ -789,13 +796,9 @@ plotly_plot
 
 ### Row 2 - Background {height="30%"}
 
-This scatterplot is adjacent to the other one, but using questions 7 and question 9 in the Wellcome Global Report of 2018.
-
-Question 7 asks, "Have you, personally, tried to get any information about medicine, disease, or health in the past 30 days?" while Question 9 asks, "Q9 Would you, personally, like to know more about medicine, disease, or health?."
-
-Countrywide statistics corresponding to question 9 are on the x-axis while countrywide statistics corresponding to question 7 are on the y-axis. The median values for each question are shown as the dashed lines like the other scatterplot. The countries are colored by region and the size of the point is larger for the worldwide data point.
-
-Hovering over the points in the scatterplot gives information on the exact countrywide statistics, the country name, and the country region.
+::: {.card title="Worldwide Health, Disease, and Medicine Interest" padding="3px"}
+Worldwide, about **78%** of people said they were interested in health, disease, or medicine, while **45%** of people said they sought information about health, medicine, or disease in the last 30 days. Similarly, more people claim to be in interested in these topics however are not actively seeking information about them.
+:::
 
 
 # 2020 Opinion: Mental Health
@@ -1051,18 +1054,18 @@ Answer choices for the two 2020 questions used to create the tables are extremel
 
 #### Row 1 - Commentary
 
+::: {.card title="Commentary" padding="3px"}
 Though the 2018 and 2020 Wellcome Global Monitor surveys did not ask the same questions, they have questions regarding national government. In 2018, the general trust in national government and trust in government health and medical advice were asked. In 2020, the survey asked about the importance of government funding for research on cancer and anxiety. The tables above show the percentage of people who responded with a lot or some trust in their national government in 2018 and the percentage of people who responded with extremely important or somewhat important for government funding for research on cancer and anxiety in 2020.
 
 It seems that in 2020 (post COVID pandemic), larger percentages of the world believe the government should do more research on either, which might lead to greater trust in government advice about health and medicine. It's noted in the report that less countries were surveyed in 2020 than in 2018 due to the global pandemic and also required a change in surveying method in the more recent survey (conducted only through phone call in 2020).
 
+:::
+
 
 #### Row 2 - Link to 2018 and 2020 data
-The full Wellcome Global Monitor 2018 report can be found here: <https://wellcome.ac.uk/sites/default/files/wellcome-global-monitor-2018.pdf>.
-
-The full Wellcome Global Monitor 2020 report and data sets can be found here: <https://wellcome.org/reports/wellcome-global-monitor-covid-19/2020>.
-
-
-#### Other information
+::: {.card title="Links and Other Information" padding="3px"}
+- The full Wellcome Global Monitor 2018 report can be found here: <https://wellcome.ac.uk/sites/default/files/wellcome-global-monitor-2018.pdf>.
+- The full Wellcome Global Monitor 2020 report and data sets can be found here: <https://wellcome.org/reports/wellcome-global-monitor-covid-19/2020>.
 - Dashboard theme from <https://bootswatch.com/simplex/>.
 - Navigation Icon from <https://www.flaticon.com/free-icons/navigation>.
-
+:::
