@@ -19,15 +19,17 @@ format:
         href: https://twitter.com/hannahpawig
 logo: "images/navigation-logo.svg"
 logo-alt: "Red colored navigation logo pointing upward."
+server: shiny
 ---
 
 ```{r}
+#| context: setup
 #| message: false
 #| label: packages
 # Package names
 packages <- c("tidyverse", "here", "readxl", "scales", "RColorBrewer", "leaflet",
               "sf", "rnaturalearth", "countrycode", "plotly", "janitor",
-              "rnaturalearthdata", "readr", "kableExtra", "paletteer")
+              "rnaturalearthdata", "readr", "kableExtra", "paletteer", "shiny")
 
 
 # Install packages not yet installed
@@ -42,10 +44,71 @@ invisible(lapply(packages, library, character.only = TRUE))
 ## https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
 ```
 
+```{r}
+#| context: setup
+#| label: server-functions
+
+
+# For page 2
+# This function takes in user input 'question_of_interest' and determines what question to focus on 
+find_mapQ <- function(input) {
+  question_pattern = ""
+  if (input == "Interest in Science") {
+    question_pattern = "Q8"
+  } else if (input == "Benefit of Science") {
+    question_pattern = "Q17"
+  } else if (input == "Hope in Science") {
+    question_pattern = "Q18"
+  } else {
+    # default is Q9
+    question_pattern = "Q9"
+  }
+  return(question_pattern)
+}
+
+
+# Function takes in question pattern and creates map title.
+map_title_maker <- function(question_pattern) {
+  if (question_pattern == "Q8") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that are interested in science</div>
+      \n   (said 'Yes' on Question 8 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q9") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that are interested in health, disease, or medicine</div>
+      \n   (said 'Yes' on Question 9 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q17") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that say science benefits people like themselves in their country</div>
+      \n   (said 'Yes' on Question 17 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q18") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that agree science and technology will improve life for next generatiions</div>
+      \n   (said 'Yes' on Question 18 in Gallup Poll 2018)"
+  }
+  return (map_title)
+
+}
+## CITATION (for adding n to boxplot):
+## https://waterdata.usgs.gov/blog/boxplots/
+
+# Run this custom function to get continent sizes
+# Takes in x, the group of interest
+# Returns a dataframe of:
+# The Label: group size, found by calculating the length of the vector containing
+# The y-coordinate: to position the label next to the corresponding boxplot
+n_fun <- function(x){
+      return(data.frame(y = 1.1,
+                        label = paste0("n = ", length(x))))
+}
+
+```
+
 # 2018 Opinion: Vaccines
 
 ```{r}
-#| label: read-in-wellcome-data-2018
+#| context: setup
+#| label: read-in-2018-wgm-data
 
 wgm18 <- read_excel(path = here("data", 
                     "wgm2018-dataset-crosstabs-all-countries.xlsx"),
@@ -143,8 +206,7 @@ regions_codes <- data_dict |>
 
 ```{r}
 #| label: read-in-wellcome-data-2020
-#| message: false
-
+#| context: setup
 # read in 2020 crosstab data
 wgm20 <- read_excel(path = here("data",
                                 "wgm2020-mentalhealthmodule-crossnational-tabs.xlsx"),
@@ -154,14 +216,14 @@ wgm20 <- read_excel(path = here("data",
   janitor::clean_names()
 
 # Read in 2020 file
-wgm_full_df <- read_csv(path = here("data",
+wgm_full_df <- read_csv(here("data",
                                "wgm_full_wave2_public_file_final (1)_csv.csv"))
 
 ```
 
-
 ```{r}
-#| label: wellcome-data-assigning
+#| label: wgm2018-create-continents
+#| context: setup
 # create df with country and assigned region
 country_region <- full_df_2018 |> 
   select(WP5, Regions_Report) |> 
@@ -181,7 +243,7 @@ country_region <- full_df_2018 |>
 # assign region to plotting data frame with a join
 plot_df <- wd_q25|>
   left_join(country_region, by = "country") |> 
-  # create new regions
+  # create continents variable
   mutate(
     continent = case_when(
       str_detect(region, "Asia") ~ "Asia",
@@ -197,7 +259,8 @@ plot_df <- wd_q25|>
 ```
 
 ```{r}
-#| label: plotting-df
+#| label: create-boxplots-df
+#| context: setup
 # Create data frame for the vaccine percentages by country and region
 plot_df <- plot_df |>
   # calculate percentage of vaccine agree %s by country
@@ -225,195 +288,94 @@ plot_df <- plot_df |>
 
 ```
 
-## Card 1 {.tabset}
-
-### Graph
-
 ```{r}
-#| title: Percentage of People that Believe Vaccines are Safe by Continent
-#| label: wellcome-graph-boxplot
+#| label: create-map-df
+#| context: setup
 
-## CITATION (for adding n to boxplot):
-## https://waterdata.usgs.gov/blog/boxplots/
-
-# custom function to get continent sizes
-# Takes in x, the group of interest
-# Returns a dataframe of:
-# The Label: group size, found by calculating the length of the vector containing
-# The y-coordinate: to position the label next to the corresponding boxplot
-
-
-n_fun <- function(x){
-  return(data.frame(y = 1.1,
-                    label = paste0("n = ", length(x))))
-}
-update_geom_defaults("text",
-                   list(size = 4,
-                        family = "sans"))
-
-# create boxplot of vaccine %s by continent; exclude NA continent
-plot <- plot_df |>
-  filter(continent != "Not Assigned") |>
-  ggplot(mapping = aes(
-    x = continent,
-    y = percentage,
-    fill = "#b92007")) + # red to match simplex red/black theme
-  geom_boxplot()+
-  labs(
-    title = "Percentage of People Who Believe Vaccines are Safe, by Continent",
-    subtitle = "n = number of countries",
-    x = "",
-    y = ""
-  ) +
-  theme_bw() +
-  theme(
-    text = element_text(family = "sans"),
-    legend.position = "none",
-    plot.title = element_text(hjust = -3.1),
-    plot.subtitle = element_text(hjust = -0.37,
-                                 face = "italic"),
-    panel.grid.minor = element_blank(),
-    panel.grid.major = element_blank(),
-    axis.ticks.y = element_blank()
-  ) +
-  scale_y_continuous(
-    labels = scales::percent_format(scale = 100), # axis labels from proportions to %s
-    breaks = seq(0, 1, by = 0.25),
-    limits = c(0.24,1.2)
-  ) +
-  stat_summary(fun.data = n_fun, 
-               geom = "text", 
-               hjust = 0.4) +
-  coord_flip()
-
-ggsave(
-  here::here("docs","images", "improved-wellcome-graph.png"),
-  plot = plot,
-  width = 6,
-  height = 4,
-  dpi = 300
-)
-
-plot
-```
-
-
-
-### Map
-
-```{r}
-#| label: health-interest-data
 map_df <- wgm18 |>
-  janitor::clean_names() |> 
-  select(
-    country:response, column_n_percent_4
-  ) |> 
-  filter(
-    response == "Yes",
-    str_detect(question, pattern = "Q9")
-  ) |> 
-  rename(
-    percentage_yes = column_n_percent_4
-  ) |> 
-  mutate(
-    percentage_yes = 100*round(percentage_yes, 2)
-  ) |> 
-  select(country, percentage_yes) |> 
-  # creating country 3-digit code column
-  # with the help of the countrycode package, which I asked Gemini about
-  mutate(iso_a3 = countrycode(country,
-                            origin = "country.name",
-                            destination = "iso3c"),
-         iso_a3 = case_when(
-           country == "Kosovo" ~ "XKX",
-           TRUE ~ iso_a3
-         )) 
-
-
-
-
-```
-
-```{r}
-#| title: Map of Countries' Interest in Health, Disease, or Medicine
-## Citation
-## To write this code chunk I asked Gemini to help me utilize the rnaturalearth and leaflet packages
-map <- leaflet() |> 
-  addTiles() 
-
-
+      janitor::clean_names() |> 
+      select(
+        country:response, column_n_percent_4
+      ) |> 
+    # only filter "Yes" responses because questions of interest are Y/N questions
+      filter(response == 'Yes') |> 
+      rename(
+        percentage_yes = column_n_percent_4
+      ) |> 
+      mutate(
+        percentage_yes = 100*round(percentage_yes, 2)
+      ) |> 
+      select(country, question, percentage_yes) |> 
+      # creating country 3-digit code column
+      # with the help of the countrycode package, which I asked Gemini about
+      mutate(code = countrycode(country,
+                                origin = "country.name",
+                                destination = "iso3c"), # want 3-letter code
+             code = case_when(
+               country == "Kosovo" ~ "XKX",
+               TRUE ~ code
+             )) 
 
 # Get world map data from Natural Earth
 world <- ne_countries(scale = "medium", # size
                       returnclass = "sf") # output object
 
-# Merge Poll data with the world map data
-world_data <- world |>
-  left_join(map_df, by = c("adm0_a3" = "iso_a3"))
 
-# Define color palette based on percentage
-pal <- colorNumeric(
-  palette = "OrRd", # Color palette
-  domain = world_data$percentage_yes
-)
+```
 
-# Create leaflet map
-# add a plot label
-map_plot <- world_data |> 
-  leaflet() |> 
-  addTiles() |> 
-  addPolygons(
-    fillColor = ~pal(percentage_yes),
-    color = "black", # Border color
-    weight = 1, # Border weight
-    fillOpacity = 0.7,
-    highlightOptions = highlightOptions(
-      weight = 2,
-      color = "white",
-      fillOpacity = 0.7,
-      bringToFront = TRUE
-    ),
-    # Tooltip label
-    # country: %
-    
-    # if else to show "no data available" if NA
-    label = ifelse(
-      is.na(world_data$percentage_yes),
-      paste0('No data available.'),
-      paste0(world_data$country,
-              ": ",
-              world_data$percentage_yes, "%")), 
-    labelOptions = labelOptions(
-      style = list("font-weight" = "normal", padding = "3px 8px"),
-      textsize = "15px",
-      direction = "auto"
-    )
-  ) |> 
-  
-  # Graph title
-  # consulted Gemini for use of addControl
-  
-  addControl(
-    html = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
-    Percentage of People that are interested in health, disease, or medicine</div>
-    \n   (said 'Yes' on Question 9 in Gallup Poll 2018)",
-    position = "bottomleft" # Adjust position as needed
-  )
+## Card 1 {.tabset}
 
-# Display the map
-map_plot
+### Boxplot
+
+```{r}
+#| title: Percentage of People that Believe Vaccines are Safe by Continent
+#| label: wellcome-graph-boxplot
+
+
+# display plot in TAB 1
+plotOutput('boxplot')
+
+```
+
+```{r}
+#| title: Boxplot Options
+#| label: boxplot-options
+
+
+
+checkboxInput('continents', 'Display Continents')
+checkboxInput('group_size', 'Display Continent Size')
+```
+
+### Map
+
+```{r}
+#| label: output-map
+#| title: Map of Countries' Opinions
+
+
+# output INTERACTIVE MAP in TAB 2
+leafletOutput('map')
+```
+
+```{r}
+#| label: map-options
+
+selectInput(inputId = 'question_of_interest', label = 'What Global Opinion Do You Want To See?',
+            choices = c("Interest in Science", "Interest in Health, Disease, and Medicine",
+                        "Benefit of Science", "Hope in Scientists"),
+            selected = "Interest in Health, Disease, and Medicine")
 ```
 
 ## Card 2 - explanation
 
-The first visualization is a remake of the original Wellcome Global Monitor 2018 report, (link may be found in the Graph tab). The second visualization is an *interactive* map of the percentage of people that are interested in health, disease, or medicine (said "Yes" on Question 9 in the Gallup Poll 2018). This map was created using the leaflet package and the Natural Earth dataset and takes inspiration from the 2018 report's Chart 2.14 (Wellcome Global Monitor 2019: Understanding and Interest in Science and Health, 39).
+The first visualization is a remake of the original Wellcome Global Monitor 2018 report, (link may be found in the Graph tab). The map tab contains an *interactive* map of the percentage of people that responded "Yes" to questions regarding trust, interest, or belief in topics related to health and science. This map was created using the `leaflet` package and the Natural Earth data set and takes inspiration from the 2018 report's Chart 2.14 (Wellcome Global Monitor 2019: Understanding and Interest in Science and Health, page 39).
 
-These two visualizations together show us a relationship between interest in health, disease, and medicine and opinion on vaccine safety. For example, the boxplot of the Americas shows that a majority (nearly 75%) of countries in the Americas believe vaccines are safe. Meanwhile on the interactive map, we can quickly see that the countries in the Americas are mostly darker hues, meaning these countries have higher reported interest in health, disease, and medicine. 
-
+These two visualizations together show us a relationship between interest in health, disease, and medicine and opinion on vaccine safety. For example, the boxplot of the Americas shows that a majority (nearly 75%) of countries in the Americas believe vaccines are safe. Meanwhile looking at the map (option 2), we can quickly see that the countries in the Americas are mostly darker hues, meaning these countries have higher reported interest in health, disease, and medicine.
 
 # 2018: Interest in Health and Science
 
-## Column 1 - 2018 Interest in Science 
+## Column 1 - 2018 Interest in Science
 
 ```{r}
 #| label: science-interest-data
@@ -800,23 +762,20 @@ plotly_plot
 Worldwide, about **78%** of people said they were interested in health, disease, or medicine, while **45%** of people said they sought information about health, medicine, or disease in the last 30 days. Similarly, more people claim to be in interested in these topics however are not actively seeking information about them.
 :::
 
-
 # 2020 Opinion: Mental Health
-
-
 
 ## Column 1 {.tabset}
 
 ### Background {.callout}
+
 In 2020, about 45.7% of people surveyed in the 2020 Wellcome Global Monitor report said that they believe that mental health is more or as important as one's physical health when regarding one's well-being.
 
 According to the 2020 Wellcome Gallup Monitor report, the survey was more focused on the importance of mental health. The following table shows some more worldwide responses in 2020 related to anxiety, depression, and social media -- common topics when it comes to mental health today.
 
-
-
 ### Quick Stats
 
 #### Social Media {height="40%"}
+
 ```{r}
 #| label: 2020-quick-facts-2020-mental-health
 social_media <- wgm20 |> 
@@ -857,9 +816,8 @@ social_media |>
   kable_classic(html_font = "Cambria")
 ```
 
-
-
 #### Anxiety {height="60%"}
+
 ```{r}
 anxiety <- wgm20 |> 
   filter(
@@ -908,8 +866,6 @@ anxiety <- wgm20 |>
   kable_classic(html_font = "Cambria")
 ```
 
-
-
 #### Mental Health
 
 ```{r}
@@ -942,8 +898,6 @@ mental_health |>
   )
   
 ```
-
-
 
 # Comparing the Years
 
@@ -978,8 +932,6 @@ wgm18_Q21 <- wgm18 |>
 
 
 ```
-
-
 
 ```{r}
 #| label: 2020-data-govt-research
@@ -1034,21 +986,22 @@ wgm20_govt |>
 ```
 
 ### Background Information
+
 The 2018 questions that were used to gauge trust in one's own national government are:
-- "How about the national government in this country? Do you trust them a lot, some, not much, or not at all?"
-- "In general, how much do you trust medical and health advice from the government in this country?"
 
-Answer choices for the 2018 questions used to calculate the percentages in the first table are: a lot, some, not much, or not at all. The percentages include those who responded with a lot or some trust. 
+-   "How about the national government in this country? Do you trust them a lot, some, not much, or not at all?"
 
+-   "In general, how much do you trust medical and health advice from the government in this country?"
+
+Answer choices for the 2018 questions used to calculate the percentages in the first table are: a lot, some, not much, or not at all. The percentages include those who responded with *a lot* or *some* trust.
 
 The 2020 questions used to gauge opinion on government funding for research:
-- "Important for National Govt to Fund Research on Cancer"
-- "Important for National Govt to Fund Research on Anxiety/Depression"
 
+-   "Important for National Govt to Fund Research on Cancer"
 
-Answer choices for the two 2020 questions used to create the tables are extremely important, somewhat important, not too important, not important at all, or don't know/refused to answer. The percentages in the second table include those who responded with extremely important or somewhat important.
+-   "Important for National Govt to Fund Research on Anxiety/Depression"
 
-
+Answer choices for the two 2020 questions used to create the tables are extremely important, somewhat important, not too important, not important at all, or don't know/refused to answer. The percentages in the second table include those who responded with *extremely important* or *somewhat important*.
 
 ## Column 2
 
@@ -1058,14 +1011,151 @@ Answer choices for the two 2020 questions used to create the tables are extremel
 Though the 2018 and 2020 Wellcome Global Monitor surveys did not ask the same questions, they have questions regarding national government. In 2018, the general trust in national government and trust in government health and medical advice were asked. In 2020, the survey asked about the importance of government funding for research on cancer and anxiety. The tables above show the percentage of people who responded with a lot or some trust in their national government in 2018 and the percentage of people who responded with extremely important or somewhat important for government funding for research on cancer and anxiety in 2020.
 
 It seems that in 2020 (post COVID pandemic), larger percentages of the world believe the government should do more research on either, which might lead to greater trust in government advice about health and medicine. It's noted in the report that less countries were surveyed in 2020 than in 2018 due to the global pandemic and also required a change in surveying method in the more recent survey (conducted only through phone call in 2020).
-
 :::
-
 
 #### Row 2 - Link to 2018 and 2020 data
+
 ::: {.card title="Links and Other Information" padding="3px"}
-- The full Wellcome Global Monitor 2018 report can be found here: <https://wellcome.ac.uk/sites/default/files/wellcome-global-monitor-2018.pdf>.
-- The full Wellcome Global Monitor 2020 report and data sets can be found here: <https://wellcome.org/reports/wellcome-global-monitor-covid-19/2020>.
-- Dashboard theme from <https://bootswatch.com/simplex/>.
-- Navigation Icon from <https://www.flaticon.com/free-icons/navigation>.
+-   The full Wellcome Global Monitor 2018 report can be found here: <https://wellcome.ac.uk/sites/default/files/wellcome-global-monitor-2018.pdf>.
+-   The full Wellcome Global Monitor 2020 report and data sets can be found here: <https://wellcome.org/reports/wellcome-global-monitor-covid-19/2020>.
+-   Dashboard theme from <https://bootswatch.com/simplex/>.
+-   Navigation Icon from <https://www.flaticon.com/free-icons/navigation>.
 :::
+
+```{r}
+#| context: server
+#| label: server-code
+
+# Define Boxplot output - GRAPH 1
+output$boxplot <- renderPlot({
+  
+  # Checkbox option 1
+  # filter out countries with no region
+  if (input$continents) { # user checks continents box
+      plot_df <- plot_df |> 
+      filter(continent != "Not Assigned")
+      }
+  
+  # define default boxplot
+  p <- plot_df |> 
+    ggplot(mapping = aes(
+      x = continent,
+      y = percentage,
+      fill = "#b92007")) +
+    geom_boxplot() +
+    labs(
+      title = "Percentage of People Who Believe Vaccines are Safe, by Continent",
+      subtitle = "n = number of countries",
+      x = "",
+      y = ""
+    ) +
+    theme_bw() +
+    theme(
+      text = element_text(family = "sans"),
+      legend.position = "none",
+      plot.title = element_text(hjust = -3.1),
+      plot.subtitle = element_text(hjust = -0.37,
+                                   face = "italic"),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      axis.ticks.y = element_blank()
+    ) +
+    scale_y_continuous(
+      labels = scales::percent_format(scale = 100), # axis labels from proportions to %s
+      breaks = seq(0, 1, by = 0.25),
+      limits = c(0.24,1.2)
+    )  +
+    coord_flip()
+
+  # Options
+  
+  # Checkbox 2: add continent sizes to plot
+  if (input$group_size) {
+    
+    update_geom_defaults("text",
+                       list(size = 4,
+                            family = "sans"))
+     p <- p + stat_summary(fun.data = n_fun,
+                            geom = "text", 
+                            hjust = 0.4)}
+     
+ # output boxplot     
+  p
+  
+})
+
+
+
+#######################
+### Define map plot ###
+#######################
+
+
+output$map <- renderLeaflet({
+
+# Option 1: Choosing question
+  
+  # update (filter) map data based on user's inputted question of interest
+  map_filtered <- map_df |>
+    filter(
+      # filter data based on user's inputted question of interest
+      str_detect(question, pattern = find_mapQ(input$question_of_interest))
+    )
+  
+  
+    # Merge Poll data with the world map data
+  world_data <- world |>
+    left_join(map_filtered, by = c("iso_a3" = "code"))
+  
+  # Define color palette based on percentage
+  pal <- colorNumeric(
+    palette = "OrRd", # Color palette
+    domain = world_data$percentage_yes
+  )
+  
+  
+    # Create leaflet map
+  map_plot <- world_data |>
+    leaflet() |>
+    addTiles() |>
+    addPolygons(
+      fillColor = ~pal(percentage_yes),
+      color = "black", # Border color
+      weight = 1, # Border weight
+      fillOpacity = 0.7,
+      highlightOptions = highlightOptions(
+        weight = 2,
+        color = "white",
+        fillOpacity = 0.7,
+        bringToFront = TRUE
+      ),
+      # Tooltip label
+      # country: %
+
+      # if else to show "no data available" if NA
+      label = ifelse(
+        is.na(world_data$percentage_yes),
+        paste0('No data available.'),
+        paste0(world_data$country,
+                ": ", world_data$percentage_yes, "%")),
+      labelOptions = labelOptions(
+        style = list("font-weight" = "normal", padding = "3px 8px"),
+        textsize = "15px",
+        direction = "auto"
+      )
+    ) |>
+
+    # Graph title
+    # consulted Gemini for use of addControl
+
+    addControl(
+      html = map_title_maker(question_pattern = find_mapQ(input = input$question_of_interest)),
+      position = "bottomleft" # Adjust position as needed
+    )
+
+  # call map object
+  map_plot
+
+})
+
+```
