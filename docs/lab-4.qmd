@@ -1,5 +1,6 @@
 ---
-title: ""
+title: "Lab 4"
+subtitle: "Interactive Dashboard"
 editor: source
 author: Hannah Pawig
 format:
@@ -46,80 +47,36 @@ invisible(lapply(packages, library, character.only = TRUE))
 
 ```{r}
 #| context: setup
-#| label: server-functions
+#| label: load-custom-functions
+#| 
+# Load pre-made custom functions made in another file
+source(file = here("docs",
+            "server-fns.R"), encoding = "UTF-8")
 
-
-# For page 2
-# This function takes in user input 'question_of_interest' and determines what question to focus on 
-find_mapQ <- function(input) {
-  question_pattern = ""
-  if (input == "Interest in Science") {
-    question_pattern = "Q8"
-  } else if (input == "Benefit of Science") {
-    question_pattern = "Q17"
-  } else if (input == "Hope in Science") {
-    question_pattern = "Q18"
-  } else {
-    # default is Q9
-    question_pattern = "Q9"
-  }
-  return(question_pattern)
-}
-
-
-# Function takes in question pattern and creates map title.
-map_title_maker <- function(question_pattern) {
-  if (question_pattern == "Q8") {
-    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
-      Percentage of People that are interested in science</div>
-      \n   (said 'Yes' on Question 8 in Gallup Poll 2018)"
-  } else if (question_pattern == "Q9") {
-    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
-      Percentage of People that are interested in health, disease, or medicine</div>
-      \n   (said 'Yes' on Question 9 in Gallup Poll 2018)"
-  } else if (question_pattern == "Q17") {
-    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
-      Percentage of People that say science benefits people like themselves in their country</div>
-      \n   (said 'Yes' on Question 17 in Gallup Poll 2018)"
-  } else if (question_pattern == "Q18") {
-    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
-      Percentage of People that agree science and technology will improve life for next generatiions</div>
-      \n   (said 'Yes' on Question 18 in Gallup Poll 2018)"
-  }
-  return (map_title)
-
-}
-## CITATION (for adding n to boxplot):
-## https://waterdata.usgs.gov/blog/boxplots/
-
-# Run this custom function to get continent sizes
-# Takes in x, the group of interest
-# Returns a dataframe of:
-# The Label: group size, found by calculating the length of the vector containing
-# The y-coordinate: to position the label next to the corresponding boxplot
-n_fun <- function(x){
-      return(data.frame(y = 1.1,
-                        label = paste0("n = ", length(x))))
-}
 
 ```
 
-# 2018 Opinion: Vaccines
-
 ```{r}
 #| context: setup
-#| label: read-in-2018-wgm-data
+#| label: load-all-data
+
+### DATASET 1: WGM 2018 ###
+
 
 wgm18 <- read_excel(path = here("data", 
-                    "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-  sheet = "Crosstabs all countries",
-  skip = 2, 
-  col_names = TRUE) |> 
-  fill(Question)
+                                "wgm2018-dataset-crosstabs-all-countries.xlsx"),
+                    sheet = "Crosstabs all countries",
+                    skip = 2, 
+                    col_names = TRUE) |> 
+  fill(Question) |> 
+  clean_names()
 
 
-wd_q25<- wgm18 |>
-  janitor::clean_names() |> 
+
+
+# Filter for the question of interest
+# This filters WGM 2018 data for Question 25 responses regarding Vaccines
+wd_q25 <- wgm18 |>
   select(
     country:response, column_n_percent_4
   ) |> 
@@ -132,17 +89,21 @@ wd_q25<- wgm18 |>
 
 full_df_2018 <- read_excel(path = here ("data",
                                         "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-                              sheet = "Full dataset",
-                              skip = 0,
-                              col_names = TRUE)
+                           sheet = "Full dataset",
+                           skip = 0,
+                           col_names = TRUE)
 
 
-# Read in 2018 data dictionary
+
+#  WGM 2018 data dictionary  #
+
+
+
 data_dict <- read_excel(path = here("data",
                                     "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-                              sheet = "Data dictionary",
-                              skip = 0,
-                              col_names = TRUE) |> 
+                        sheet = "Data dictionary",
+                        skip = 0,
+                        col_names = TRUE) |> 
   filter(
     `Variable Name` %in% c('WP5', 'Regions_Report')
   )
@@ -157,7 +118,7 @@ country_w_codes <- data_dict |>
       pattern = ",",
       n = length(unique(full_df_2018$WP5)), 
       simplify = TRUE
-      )
+    )
     
   ) |> 
   janitor::clean_names() |> 
@@ -173,6 +134,8 @@ country_w_codes <- data_dict |>
     country = str_remove(country, ","),
     code = as.numeric(code)
   )
+
+
 
 # create tibble with two columns: Region code and region name
 regions_codes <- data_dict |> 
@@ -201,29 +164,28 @@ regions_codes <- data_dict |>
     region = str_remove(region, ","),
     code = as.numeric(code)
   )
-  
-```
 
-```{r}
-#| label: read-in-wellcome-data-2020
-#| context: setup
+
+
+
 # read in 2020 crosstab data
 wgm20 <- read_excel(path = here("data",
                                 "wgm2020-mentalhealthmodule-crossnational-tabs.xlsx"),
-  sheet = "Socio-economic & demographic",
-  skip = 2, 
-  col_names = TRUE) |> 
+                    sheet = "Socio-economic & demographic",
+                    skip = 2, 
+                    col_names = TRUE) |> 
   janitor::clean_names()
 
 # Read in 2020 file
 wgm_full_df <- read_csv(here("data",
-                               "wgm_full_wave2_public_file_final (1)_csv.csv"))
+                             "wgm_full_wave2_public_file_final (1)_csv.csv"))
 
-```
 
-```{r}
-#| label: wgm2018-create-continents
-#| context: setup
+
+
+
+
+
 # create df with country and assigned region
 country_region <- full_df_2018 |> 
   select(WP5, Regions_Report) |> 
@@ -231,14 +193,17 @@ country_region <- full_df_2018 |>
   left_join(country_w_codes, by = c("WP5" = "code")) |> 
   left_join(regions_codes, by = c("Regions_Report" = "code")) |> 
   select(country, region) |> 
- # replace republic of congo and palestine to match Crosstab country list
- mutate(
-   country = case_when(
-     str_detect(country, "Palestinian") ~ "Palestine",
-     country == "Republic of Congo" ~ "Congo, Rep.",
-     TRUE ~ country
-   )
- )
+  # replace republic of congo and palestine to match Crosstab country list
+  mutate(
+    country = case_when(
+      str_detect(country, "Palestinian") ~ "Palestine",
+      country == "Republic of Congo" ~ "Congo, Rep.",
+      TRUE ~ country
+    )
+  )
+
+
+
 
 # assign region to plotting data frame with a join
 plot_df <- wd_q25|>
@@ -254,13 +219,14 @@ plot_df <- wd_q25|>
       region == "Aus/NZ" ~ "Oceania",
       TRUE ~ "Not Assigned"
     )
-  ) 
+  ) |> 
+  filter(
+    # Remove countries with no assigned continent
+    continent != "Not Assigned"
+  )
 
-```
 
-```{r}
-#| label: create-boxplots-df
-#| context: setup
+
 # Create data frame for the vaccine percentages by country and region
 plot_df <- plot_df |>
   # calculate percentage of vaccine agree %s by country
@@ -269,7 +235,7 @@ plot_df <- plot_df |>
     percentage = sum(column_n_percent_4, na.rm = TRUE)
   ) |>
   ungroup() |>
-
+  
   # calculate median percentage of vaccine agree %s by region
   group_by(continent) |>
   mutate(
@@ -285,104 +251,45 @@ plot_df <- plot_df |>
     country = fct_reorder(country, percentage)
   )
 
-
-```
-
-```{r}
-#| label: create-map-df
-#| context: setup
-
 map_df <- wgm18 |>
-      janitor::clean_names() |> 
-      select(
-        country:response, column_n_percent_4
-      ) |> 
-    # only filter "Yes" responses because questions of interest are Y/N questions
-      filter(response == 'Yes') |> 
-      rename(
-        percentage_yes = column_n_percent_4
-      ) |> 
-      mutate(
-        percentage_yes = 100*round(percentage_yes, 2)
-      ) |> 
-      select(country, question, percentage_yes) |> 
-      # creating country 3-digit code column
-      # with the help of the countrycode package, which I asked Gemini about
-      mutate(code = countrycode(country,
-                                origin = "country.name",
-                                destination = "iso3c"), # want 3-letter code
-             code = case_when(
-               country == "Kosovo" ~ "XKX",
-               TRUE ~ code
-             )) 
+  select(
+    country:response, column_n_percent_4
+  ) |> 
+  # only filter "Yes" responses because questions of interest are Y/N questions
+  filter(response == 'Yes') |> 
+  rename(
+    percentage_yes = column_n_percent_4
+  ) |> 
+  mutate(
+    percentage_yes = 100*round(percentage_yes, 2)
+  ) |> 
+  select(country, question, percentage_yes) |> 
+  # creating country 3-digit code column
+  # with the help of the countrycode package, which I asked Gemini about
+  mutate(code = countrycode(country,
+                            origin = "country.name",
+                            destination = "iso3c"), # want 3-letter code
+         code = case_when(
+           country == "Kosovo" ~ "XKX",
+           TRUE ~ code
+         )) 
+
+
+
 
 # Get world map data from Natural Earth
 world <- ne_countries(scale = "medium", # size
                       returnclass = "sf") # output object
 
 
-```
-
-## Card 1 {.tabset}
-
-### Boxplot
-
-```{r}
-#| title: Percentage of People that Believe Vaccines are Safe by Continent
-#| label: wellcome-graph-boxplot
-
-
-# display plot in TAB 1
-plotOutput('boxplot')
-
-```
-
-```{r}
-#| title: Boxplot Options
-#| label: boxplot-options
 
 
 
-checkboxInput('continents', 'Display Continents')
-checkboxInput('group_size', 'Display Continent Size')
-```
 
-### Map
-
-```{r}
-#| label: output-map
-#| title: Map of Countries' Opinions
-
-
-# output INTERACTIVE MAP in TAB 2
-leafletOutput('map')
-```
-
-```{r}
-#| label: map-options
-
-selectInput(inputId = 'question_of_interest', label = 'What Global Opinion Do You Want To See?',
-            choices = c("Interest in Science", "Interest in Health, Disease, and Medicine",
-                        "Benefit of Science", "Hope in Scientists"),
-            selected = "Interest in Health, Disease, and Medicine")
-```
-
-## Card 2 - explanation
-
-The first visualization is a remake of the original Wellcome Global Monitor 2018 report, (link may be found in the Graph tab). The map tab contains an *interactive* map of the percentage of people that responded "Yes" to questions regarding trust, interest, or belief in topics related to health and science. This map was created using the `leaflet` package and the Natural Earth data set and takes inspiration from the 2018 report's Chart 2.14 (Wellcome Global Monitor 2019: Understanding and Interest in Science and Health, page 39).
-
-These two visualizations together show us a relationship between interest in health, disease, and medicine and opinion on vaccine safety. For example, the boxplot of the Americas shows that a majority (nearly 75%) of countries in the Americas believe vaccines are safe. Meanwhile looking at the map (option 2), we can quickly see that the countries in the Americas are mostly darker hues, meaning these countries have higher reported interest in health, disease, and medicine.
-
-# 2018: Interest in Health and Science
-
-## Column 1 - 2018 Interest in Science
-
-```{r}
-#| label: science-interest-data
+##Vaccine Page Dataframes 
 
 # Create a data frame with the percentage of people that agree vaccines are safe worldwide
 worldwide_q6_8 <- wgm18 |>
-  janitor::clean_names() |> 
   select(
     country:response, column_n_percent_4
   ) |> 
@@ -408,8 +315,8 @@ worldwide_q6_8 <- wgm18 |>
       case_when(
         str_detect(question, pattern = "Q8") ~ "Q8",
         str_detect(question, pattern = "Q6") ~ "Q6"
-      
-  )) |> 
+        
+      )) |> 
   select(-response) |> 
   # pivot
   pivot_wider(
@@ -419,7 +326,6 @@ worldwide_q6_8 <- wgm18 |>
 
 
 q6_8_data <- wgm18 |>
-  janitor::clean_names() |> 
   select(
     country:response, column_n_percent_4
   ) |> 
@@ -441,14 +347,14 @@ q6_8_data <- wgm18 |>
       str_detect(question, pattern = "Q6") ~ "Q6",
       str_detect(question, pattern = "Q8") ~ "Q8"
     )
-    ) |>
+  ) |>
   group_by(country, region, question, response) |> 
   summarize(
     percentage = round(mean(percentage, na.rm = TRUE), 2)
   ) |> 
   ungroup() |> 
   select(-response) |> 
-    # pivot
+  # pivot
   pivot_wider(
     names_from = question,
     values_from = percentage
@@ -459,13 +365,9 @@ q6_8_data <- wgm18 |>
 q6_8_data <- q6_8_data |> 
   bind_rows(worldwide_q6_8) 
 
+# 2018 medians for question 6 and question 8 
 
-```
-
-```{r}
-#| label: calculate-medians
-
-medians <- q6_8_data |> 
+medians_science <- q6_8_data |> 
   filter(region != "World") |>
   summarize(
     Q6 = 100*median(Q6, na.rm = TRUE),
@@ -476,7 +378,339 @@ medians <- q6_8_data |>
   )
 
 
+
+# Create a data frame with the WORLDWIDE percentages of:
+# People who have sought information about Health, Medicine, and Disease (Q7)
+# People who say they're interested in Health, Medicine, and Disease (Q9)
+
+worldwide_health_interest <- wgm18 |>
+  select(
+    country:response, column_n_percent_4
+  ) |> 
+  # copy question to fill NAs
+  fill(question) |> 
+  filter(
+    str_detect(question, pattern = "Q7") |
+      str_detect(question, pattern = "Q9"),
+    response == "Yes"
+  ) |> 
+  mutate(
+    percentage = column_n_percent_4
+  ) |> 
+  group_by(question, response) |> 
+  summarise(
+    percentage = round(mean(percentage, na.rm = TRUE), 2),
+    region = "World",
+    country = "World"
+  ) |>
+  ungroup() |> 
+  mutate(
+    question = 
+      case_when(
+        str_detect(question, pattern = "Q7") ~ "Q7",
+        str_detect(question, pattern = "Q9") ~ "Q9"
+        
+      )) |> 
+  select(-response) |> 
+  # pivot
+  pivot_wider(
+    names_from = question,
+    values_from = percentage
+  )
+
+
+
+##       Health, Disease and Medicine Interest Dataframes       ##
+
+
+# Create a data frame with the country percentages of:
+# People who have sought information about Health, Medicine, and Disease (Q7)
+# People who say they're interested in Health, Medicine, and Disease (Q9) 
+
+health_interest <- wgm18 |>
+  select(
+    country:response, column_n_percent_4
+  ) |> 
+  fill(question) |> 
+  filter(
+    str_detect(question, pattern = "Q7") |
+      str_detect(question, pattern = "Q9"),
+    response == "Yes"
+  ) |> 
+  mutate(
+    percentage = column_n_percent_4
+  ) |> 
+  select(country, question, percentage, response)  |> 
+  left_join(country_region, by = "country") |> 
+  mutate(
+    region = ifelse(
+      region == "Aus/NZ", "Australia/New Zealand", region),
+    question = case_when(
+      str_detect(question, pattern = "Q7") ~ "Q7",
+      str_detect(question, pattern = "Q9") ~ "Q9"
+    )
+  ) |>
+  group_by(country, region, question, response) |> 
+  summarize(
+    percentage = round(mean(percentage, na.rm = TRUE), 2)
+  ) |> 
+  ungroup() |> 
+  select(-response) |> 
+  # pivot
+  pivot_wider(
+    names_from = question,
+    values_from = percentage
+  )
+
+
+# join country percentages with worldwide percentage rows
+health_interest <- health_interest |> 
+  bind_rows(worldwide_health_interest) 
+
+
+
+# Calculate Medians for Health, Medicine, and Disease percentages
+medians_hmd <- health_interest |> 
+  filter(region != "World") |>
+  summarize(
+    Q7 = 100*median(Q7, na.rm = TRUE),
+    Q9 = 100*median(Q9, na.rm = TRUE)
+  ) |> as_tibble(
+    rownames = "median",
+    colnames = c("Q7", "Q9")
+  )
+
+
+
+
+##                Mental Health Page Dataframes                ##
+
+
+# SOCIAL MEDIA
+
+social_media <- wgm20 |> 
+  filter(
+    str_detect(question, pattern = "Social")
+  )
+
+
+
+# TABLE FOR SOCIAL MEDIA
+# Create table showing opinion of social media
+soc_media_stats <- social_media |> 
+  rename(
+    Question = question,
+    Percentage = column_n_percent_4,
+    Response = x3
+  ) |> 
+  # Keep rows with responses of interest
+  filter(
+    Response %in% c('Yes',"Almost every hour","Several times a day","Once a day",
+                    "A few days a week","All of the time", "Most of the time","Some of the time")
+  ) |> 
+  # Create new variable: Topic (for displaying purposes)
+  mutate(Topic = case_when(
+    wellcome_tag == "W27" ~ "Said They Used Social Media in the last 30 days",
+    wellcome_tag == "W28" ~ "Said They Used Social Media at least a few times per week",
+    wellcome_tag == "W29" ~ "Said They Saw Health Information on Social Media at least some of the time"
+  )) |> 
+  group_by(Topic) |> 
+  summarize(
+    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
+  ) |> 
+  ungroup() |> 
+  mutate(
+    Percentage = percent_format(
+      accuracy = 0.1,
+      scale = 100
+    )(Percentage)
+  ) |> as_tibble() 
+# |> kbl(caption = "Social Media") |> 
+#   kable_classic(html_font = "Cambria")
+
+# ANXIETY
+
+ anxiety <- wgm20 |> 
+  filter(
+    str_detect(question, pattern = "Anx")
+  ) |> 
+  rename(
+    Question = question,
+    Percentage = column_n_percent_4,
+    Response = x3
+  ) |> 
+  # Only keep rows with responses of interest
+  filter(
+    Response %in% c("A lot", "Some", 
+                    "Extremely important", "Somewhat important",
+                    "Very comfortable", "Somewhat comfortable",
+                    "Very helpful", "Somewhat helpful"))
+
+anxiety_stats <- anxiety  |> 
+  # Create new variable: Topic (for displaying purposes)
+  mutate(
+    Topic = case_when(
+      wellcome_tag == "MH3B" ~ "Believed Science Can Help Anxiety and Depression",
+      wellcome_tag == "MH4B" ~ "Believed Government Funded Research in Anxiety and Depression is Important",
+      wellcome_tag == "MH5" ~ "Felt Comfortable Talking about Mental Health",
+      wellcome_tag == "MH9A" ~ "Agree Mental Health Professionals Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9B" ~ "Agree Spiritual/Religious Activities Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9C" ~ "Agree Conversations with Family and Friends Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9D" ~ "Agree Taking Prescription Medication Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9E" ~ "Agree Exercise Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9F" ~ "Agree Changing Work Situation Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9G" ~ "Agree Changing Personal Relationships Can Help With Anxiety and Depression",
+      wellcome_tag == "MH9H" ~ "Agree Time Outdoors Can Help With Anxiety and Depression"
+    ) 
+  ) |> 
+  group_by(Topic) |> 
+  summarize(
+    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
+  ) |> 
+  mutate(
+    Percentage = percent_format(
+      accuracy = 0.1,
+      scale = 100
+    )(Percentage)
+  )
+  # kbl(caption = "Anxiety") |> 
+  # kable_classic(html_font = "Cambria")
+
+
+
+
+
+
+
+# MENTAL HEALTH
+# filter all data and only retain mental health questions
+mental_health <- wgm20 |> 
+  filter(
+    wellcome_tag == "MH1"
+  ) |> 
+  rename(
+    Question = question,
+    Percentage = column_n_percent_4,
+    Response = x3
+  ) |>
+  filter(
+    Response %in% c("More important", "As important")
+  )
+
+
+mh_stat <- mental_health |>
+  summarize(
+    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
+  ) |>
+  mutate(
+    Percentage = percent_format(
+      accuracy = 0.1,
+      scale = 100
+    )(Percentage)
+  )
+
+
+# Comparing 2018 and 2020 dataframes
+
+wgm18_Q21 <- wgm18 |> 
+  select(
+    country:response, column_n_percent_4
+  ) |> 
+  filter(
+    response %in% c("Some", "A lot"),
+    str_detect(question, pattern = "Q21") | str_detect(question, pattern = "Q11B")
+  ) |> 
+  group_by(question) |> 
+  summarize(
+    percentage = round(mean(column_n_percent_4, na.rm = TRUE), 3)
+  ) |> 
+  mutate(
+    percentage = percent_format(
+      accuracy = 0.1,
+      scale = 100
+    )(percentage),
+    question = case_when(
+      str_detect(question, pattern = "Q21") ~ "Trust in government health and medical advice",
+      str_detect(question, pattern = "Q11B") ~ "Level of trust in national government"
+    )
+  )
+
+
+# 2020 data on opinion about national government funding research on cancer and/or anxiety
+
+
+wgm20_govt <- wgm20 |> 
+  filter(
+    wellcome_tag %in% c("MH4A", "MH4B"),
+    x3 %in% c("Extremely important", "Somewhat important")
+  ) |> 
+  group_by(question) |> 
+  summarize(
+    percentage = round(mean(column_n_percent_4, na.rm = TRUE), 3)
+  ) |> 
+  mutate(
+    percentage = percent_format(
+      accuracy = 0.1,
+      scale = 100
+    )(percentage)
+  )
+
+
 ```
+
+# 2018 Opinion: Vaccines
+
+## Card 1 {.tabset}
+
+### Boxplot {height="70%"}
+
+```{r}
+#| title: Percentage of People that Believe Vaccines are Safe by Continent
+#| label: wellcome-graph-boxplot
+
+
+# display plot in TAB 1
+plotOutput('boxplot')
+
+# Boxplot option
+
+checkboxInput('group_size', 'Display Continent Size')
+# Submit button
+submitButton("Update", icon("redo"))
+```
+
+### Map
+
+```{r}
+#| label: output-map
+#| title: Map of Countries' Opinions
+
+
+
+# output INTERACTIVE MAP in TAB 2
+leafletOutput('map')
+
+# Map Options
+selectInput(inputId = 'question_of_interest',
+            label = 'What Global Opinion Do You Want to See on the Map?',
+            choices = c("Interest in Science", "Interest in Health, Disease, and Medicine",
+                        "Benefit of Science", "Hope in Scientists"),
+            selected = "Interest in Health, Disease, and Medicine",
+            width = "100%"
+            )
+# Submit button
+submitButton("Update", icon("redo"))
+```
+
+## Card 2 - explanation
+
+The first visualization is a remake of the original Wellcome Global Monitor (WGM) 2018 report, (link may be found in the Graph tab). The map tab contains an *interactive* map of the percentage of people that responded "Yes" to questions regarding trust, interest, or belief in topics related to health and science. This map was created using the `leaflet` package and the Natural Earth data set and takes inspiration from the 2018 report's Chart 2.14 (Wellcome Global Monitor 2019: Understanding and Interest in Science and Health, page 39).
+
+These two visualizations together show us a relationship between interest in health, disease, and medicine and opinion on vaccine safety. For example, the boxplot of the Americas shows that a majority (nearly 75%) of countries in the Americas believe vaccines are safe. Meanwhile looking at the map (option 2), we can quickly see that the countries in the Americas are mostly darker hues, meaning these countries have higher reported interest in health, disease, and medicine.
+
+# 2018: Interest in Health and Science
+
+## Column 1 - 2018 Interest in Science
 
 ### Row 1 Scatterplot on Science Interest {height="70%"}
 
@@ -540,15 +774,15 @@ plot <- q6_8_data |>
   scale_color_manual(values = pal) +
   scale_shape_manual(values = c(16, 22)) + # circle and asterik shapes
   # add median vertical and horizontal lines
-  geom_hline(yintercept = medians$Q6, linetype = "dashed", color = "black") +
-  geom_vline(xintercept = medians$Q8, linetype = "dashed", color = "black") +
+  geom_hline(yintercept = medians_science$Q6, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = medians_science$Q8, linetype = "dashed", color = "black") +
   annotate(
-    "text", x = medians$Q8 + 12, y = 0, 
-    label = paste0("Median: ", medians$Q8, "%"), size = 4, color = "black"
+    "text", x = medians_science$Q8 + 12, y = 0, 
+    label = paste0("Median: ", medians_science$Q8, "%"), size = 4, color = "black"
     ) +
     annotate(
-    "text", y = medians$Q6 + 5, x = 4, 
-    label = paste0("Median: ", medians$Q6,"%"), size = 4, color = "black"
+    "text", y = medians_science$Q6 + 5, x = 4, 
+    label = paste0("Median: ", medians_science$Q6,"%"), size = 4, color = "black"
     )
 
 
@@ -571,111 +805,6 @@ In 2018, the worldwide interest in science **69%** of people said they were inte
 ## Column 2 - 2018 Scatterplot about countries' interest in Health, Medicine, and Disease
 
 ### Row 1 - Scatterplot {height="70%"}
-
-```{r}
-#| label: health-disease-medicine-interest-data
-
-# Create a data frame with the WORLDWIDE percentages of:
-# People who have sought information about Health, Medicine, and Disease (Q7)
-# People who say they're interested in Health, Medicine, and Disease (Q9)
-
-worldwide_health_interest <- wgm18 |>
-  janitor::clean_names() |> 
-  select(
-    country:response, column_n_percent_4
-  ) |> 
-  # copy question to fill NAs
-  fill(question) |> 
-  filter(
-    str_detect(question, pattern = "Q7") |
-      str_detect(question, pattern = "Q9"),
-    response == "Yes"
-  ) |> 
-  mutate(
-    percentage = column_n_percent_4
-  ) |> 
-  group_by(question, response) |> 
-  summarise(
-    percentage = round(mean(percentage, na.rm = TRUE), 2),
-    region = "World",
-    country = "World"
-  ) |>
-  ungroup() |> 
-  mutate(
-    question = 
-      case_when(
-        str_detect(question, pattern = "Q7") ~ "Q7",
-        str_detect(question, pattern = "Q9") ~ "Q9"
-      
-  )) |> 
-  select(-response) |> 
-  # pivot
-  pivot_wider(
-    names_from = question,
-    values_from = percentage
-  )
-
-
-
-# Create a data frame with the country percentages of:
-# People who have sought information about Health, Medicine, and Disease (Q7)
-# People who say they're interested in Health, Medicine, and Disease (Q9) 
-
-health_interest <- wgm18 |>
-  janitor::clean_names() |> 
-  select(
-    country:response, column_n_percent_4
-  ) |> 
-  fill(question) |> 
-  filter(
-    str_detect(question, pattern = "Q7") |
-      str_detect(question, pattern = "Q9"),
-    response == "Yes"
-  ) |> 
-  mutate(
-    percentage = column_n_percent_4
-  ) |> 
-  select(country, question, percentage, response)  |> 
-  left_join(country_region, by = "country") |> 
-  mutate(
-    region = ifelse(
-      region == "Aus/NZ", "Australia/New Zealand", region),
-    question = case_when(
-      str_detect(question, pattern = "Q7") ~ "Q7",
-      str_detect(question, pattern = "Q9") ~ "Q9"
-    )
-    ) |>
-  group_by(country, region, question, response) |> 
-  summarize(
-    percentage = round(mean(percentage, na.rm = TRUE), 2)
-  ) |> 
-  ungroup() |> 
-  select(-response) |> 
-    # pivot
-  pivot_wider(
-    names_from = question,
-    values_from = percentage
-  )
-
-
-# join country percentages with worldwide percentage rows
-health_interest <- health_interest |> 
-  bind_rows(worldwide_health_interest) 
-
-
-
-# Calculate Medians for Health, Medicine, and Disease percentages
-medians <- health_interest |> 
-  filter(region != "World") |>
-  summarize(
-    Q7 = 100*median(Q7, na.rm = TRUE),
-    Q9 = 100*median(Q9, na.rm = TRUE)
-  ) |> as_tibble(
-    rownames = "median",
-    colnames = c("Q7", "Q9")
-  )
-
-```
 
 ```{r}
 #| title: Percentage Who Sought Information about Health, Disease, and Medicine vs. Percentage Interested in Health, Disease, and Medicine
@@ -734,15 +863,15 @@ plot <- health_interest |>
   scale_color_manual(values = pal) +
   scale_shape_manual(values = c(16, 22)) + # circle and asterik shapes
   # add median vertical and horizontal lines
-  geom_hline(yintercept = medians$Q7, linetype = "dashed", color = "black") +
-  geom_vline(xintercept = medians$Q9, linetype = "dashed", color = "black") +
+  geom_hline(yintercept = medians_hmd$Q7, linetype = "dashed", color = "black") +
+  geom_vline(xintercept = medians_hmd$Q9, linetype = "dashed", color = "black") +
   annotate(
-    "text", x = medians$Q9 + 12, y = 0, 
-    label = paste0("Median: ", medians$Q9, "%"), size = 4, color = "black"
+    "text", x = medians_hmd$Q9 + 12, y = 0, 
+    label = paste0("Median: ", medians_hmd$Q9, "%"), size = 4, color = "black"
     ) +
     annotate(
-    "text", y = medians$Q7 + 5, x = 4, 
-    label = paste0("Median: ", medians$Q7,"%"), size = 4, color = "black"
+    "text", y = medians_hmd$Q7 + 5, x = 4, 
+    label = paste0("Median: ", medians_hmd$Q7,"%"), size = 4, color = "black"
     )
 
 
@@ -758,203 +887,91 @@ plotly_plot
 
 ### Row 2 - Background {height="30%"}
 
-::: {.card title="Worldwide Health, Disease, and Medicine Interest" padding="3px"}
+::: {.primary-card title="Worldwide Health, Disease, and Medicine Interest" padding="3px"}
 Worldwide, about **78%** of people said they were interested in health, disease, or medicine, while **45%** of people said they sought information about health, medicine, or disease in the last 30 days. Similarly, more people claim to be in interested in these topics however are not actively seeking information about them.
 :::
 
 # 2020 Opinion: Mental Health
 
-## Column 1 {.tabset}
+## Column 1
 
-### Background {.callout}
-
-In 2020, about 45.7% of people surveyed in the 2020 Wellcome Global Monitor report said that they believe that mental health is more or as important as one's physical health when regarding one's well-being.
+### Row 1 - Background {height="30%"}
 
 According to the 2020 Wellcome Gallup Monitor report, the survey was more focused on the importance of mental health. The following table shows some more worldwide responses in 2020 related to anxiety, depression, and social media -- common topics when it comes to mental health today.
 
-### Quick Stats
+Using questions that mention keywords like *Mental Health*, *Social Media*, or *Anxiety*, we're able to see the various statistics displayed on the side.
 
-#### Social Media {height="40%"}
+### Row 2 - Sliders
+
+::: {.text-info title="Instructions" padding="3px"}
+Use each slider to change the chosen percentage and view different summary statistics from the 2020 Wellcome Gallup Monitor Survey. The cards display social media and anxiety statistics (using the 2020 survey data) closest to the chosen respective percentage level.
+:::
 
 ```{r}
-#| label: 2020-quick-facts-2020-mental-health
-social_media <- wgm20 |> 
-  filter(
-    str_detect(question, pattern = "Social")
-  )
+#| label: quick-facts-2020-sliders
+#| title: Sliders
 
-# Create table showing opinion of social media
-social_media |> 
-  rename(
-    Question = question,
-    Percentage = column_n_percent_4,
-    Response = x3
-  ) |> 
-  # Keep rows with responses of interest
-  filter(
-     Response %in% c('Yes',"Almost every hour","Several times a day","Once a day",
-                     "A few days a week","All of the time", "Most of the time","Some of the time")
-  ) |> 
-  # Create new variable: Topic (for displaying purposes)
-  mutate(Topic = case_when(
-    wellcome_tag == "W27" ~ "Has Used Social Media in the last 30 days",
-    wellcome_tag == "W28" ~ "Uses Social Media at least a few times per week",
-    wellcome_tag == "W29" ~ "Sees Health Information on Social Media at least some of the time"
-  )) |> 
-  group_by(Topic) |> 
-  summarize(
-    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
-  ) |> 
-  ungroup() |> 
-  mutate(
-    Percentage = percent_format(
-      accuracy = 0.1,
-      scale = 100
-    )(Percentage)
-  ) |> 
-  kbl(caption = "Social Media") |> 
-  kable_classic(html_font = "Cambria")
+
+# Slider input
+# This slider takes in a percentage from 1-100 to allow the user to see what statistics
+# about mental health, social media, and anxiety they want to see.
+
+sliderInput("quick_facts_percentage_sm",
+            label = "Choose a percentage level for Social Media card",
+            min = 15, # Min(soc_media_stats$Percentage) = 18%
+            max = 65, # Max(soc_media_stats$Percentage) = 69%
+            value = 1,
+            step = ,
+            sep = "",
+            animate = TRUE)
+
+
+sliderInput("quick_facts_percentage_a",
+            label = "Choose a percentage level for the Anxiety card",
+            min = 30, # min(anxiety_stats$Percentage) = 30.2%
+            max = 47, # max(anxiety_stats$Percentage) = 47.3%
+            value = 10,
+            step = 0.1,
+            sep = "",
+            animate = TRUE)
+
+
+# Submit button
+submitButton("Submit Changes", icon("refresh"))
 ```
 
-#### Anxiety {height="60%"}
+## Quick Stat Cards {width="30%"}
+
+### Social Media
 
 ```{r}
-anxiety <- wgm20 |> 
-  filter(
-    str_detect(question, pattern = "Anx")
-  ) |> 
-  rename(
-    Question = question,
-    Percentage = column_n_percent_4,
-    Response = x3
-  ) |> 
-  # Only keep rows with responses of interest
-  filter(
-    Response %in% c("A lot", "Some", 
-                    "Extremely important", "Somewhat important",
-                    "Very comfortable", "Somewhat comfortable",
-                    "Very helpful", "Somewhat helpful")
-  ) 
- anxiety  |> 
-  # Create new variable: Topic (for displaying purposes)
-  mutate(
-    Topic = case_when(
-      wellcome_tag == "MH3B" ~ "Believes Science Can Help Anxiety and Depression",
-      wellcome_tag == "MH4B" ~ "Believes Government Funded Research in Anxiety and Depression is Important",
-      wellcome_tag == "MH5" ~ "Feels Comfortable Talking about Mental Health",
-      wellcome_tag == "MH9A" ~ "Thinks Mental Health Professionals Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9B" ~ "Thinks Spiritual/Religious Activities Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9C" ~ "Thinks Conversations with Family and Friends Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9D" ~ "Thinks Taking Prescription Medication Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9E" ~ "Thinks Exercise Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9F" ~ "Thinks Changing Work Situation Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9G" ~ "Thinks Changing Personal Relationships Can Help With Anxiety and Depression",
-      wellcome_tag == "MH9H" ~ "Thinks Time Outdoors Can Help With Anxiety and Depression"
-    ) 
-  ) |> 
-  group_by(Topic) |> 
-  summarize(
-    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
-  ) |> 
-  mutate(
-    Percentage = percent_format(
-      accuracy = 0.1,
-      scale = 100
-    )(Percentage)
-  ) |> 
-  kbl(caption = "Anxiety") |> 
-  kable_classic(html_font = "Cambria")
+#| label: quick-facts-social-media-card
+#| title: Social Media
+
+uiOutput("quick_facts_social_media")
 ```
 
-#### Mental Health
+### Anxiety
 
 ```{r}
-#| eval: false
-# filter all data and only retain mental health questions
-mental_health <- wgm20 |> 
-  filter(
-    wellcome_tag == "MH1"
-  ) |> 
-  rename(
-    Question = question,
-    Percentage = column_n_percent_4,
-    Response = x3
-  ) |>
-  filter(
-    Response %in% c("More important", "As important")
-  )
+#| label: quick-facts-anxiety-card
+#| title: Anxiety
 
+uiOutput("quick_facts_anxiety")
+```
 
+### Mental Health
 
-mental_health |> 
-  summarize(
-    Percentage = round(mean(Percentage, na.rm = TRUE), 3)
-  ) |> 
-  mutate(
-    Percentage = percent_format(
-      accuracy = 0.1,
-      scale = 100
-    )(Percentage)
-  )
-  
+```{r}
+#| label: quick-facts-mental-health-card
+#| title: Mental Health
+
+uiOutput("quick_facts_mental_health")
 ```
 
 # Comparing the Years
 
 ## Card 3 - Comparing 2018 and 2020 opinions (Quick facts) {.tabset}
-
-```{r}
-#| label: 2018-data-govt-trust
-wgm18_Q21 <- wgm18 |> 
-  janitor::clean_names() |> 
-  select(
-    country:response, column_n_percent_4
-  ) |> 
-  filter(
-    response %in% c("Some", "A lot"),
-    str_detect(question, pattern = "Q21") | str_detect(question, pattern = "Q11B")
-  ) |> 
-  group_by(question) |> 
-  summarize(
-    percentage = round(mean(column_n_percent_4, na.rm = TRUE), 3)
-  ) |> 
-  mutate(
-    percentage = percent_format(
-      accuracy = 0.1,
-      scale = 100
-    )(percentage),
-    question = case_when(
-      str_detect(question, pattern = "Q21") ~ "Trust in government health and medical advice",
-      str_detect(question, pattern = "Q11B") ~ "Level of trust in national government"
-    )
-  )
-
-
-
-```
-
-```{r}
-#| label: 2020-data-govt-research
-
-# 2020 data on opinion about national government funding research on cancer and/or anxiety
-
-
-wgm20_govt <- wgm20 |> 
-  filter(
-    wellcome_tag %in% c("MH4A", "MH4B"),
-    x3 %in% c("Extremely important", "Somewhat important")
-  ) |> 
-  group_by(question) |> 
-  summarize(
-    percentage = round(mean(column_n_percent_4, na.rm = TRUE), 3)
-  ) |> 
-  mutate(
-    percentage = percent_format(
-      accuracy = 0.1,
-      scale = 100
-    )(percentage)
-  )
-```
 
 ### Tables
 
@@ -1015,9 +1032,12 @@ It seems that in 2020 (post COVID pandemic), larger percentages of the world bel
 
 #### Row 2 - Link to 2018 and 2020 data
 
-::: {.card title="Links and Other Information" padding="3px"}
+::: {.text-secondary title="Links and Information" padding="3px"}
 -   The full Wellcome Global Monitor 2018 report can be found here: <https://wellcome.ac.uk/sites/default/files/wellcome-global-monitor-2018.pdf>.
 -   The full Wellcome Global Monitor 2020 report and data sets can be found here: <https://wellcome.org/reports/wellcome-global-monitor-covid-19/2020>.
+:::
+
+::: {.text-secondary title= "Other sources" padding="3px"}
 -   Dashboard theme from <https://bootswatch.com/simplex/>.
 -   Navigation Icon from <https://www.flaticon.com/free-icons/navigation>.
 :::
@@ -1029,12 +1049,6 @@ It seems that in 2020 (post COVID pandemic), larger percentages of the world bel
 # Define Boxplot output - GRAPH 1
 output$boxplot <- renderPlot({
   
-  # Checkbox option 1
-  # filter out countries with no region
-  if (input$continents) { # user checks continents box
-      plot_df <- plot_df |> 
-      filter(continent != "Not Assigned")
-      }
   
   # define default boxplot
   p <- plot_df |> 
@@ -1044,7 +1058,6 @@ output$boxplot <- renderPlot({
       fill = "#b92007")) +
     geom_boxplot() +
     labs(
-      title = "Percentage of People Who Believe Vaccines are Safe, by Continent",
       subtitle = "n = number of countries",
       x = "",
       y = ""
@@ -1053,8 +1066,7 @@ output$boxplot <- renderPlot({
     theme(
       text = element_text(family = "sans"),
       legend.position = "none",
-      plot.title = element_text(hjust = -3.1),
-      plot.subtitle = element_text(hjust = -0.37,
+      plot.subtitle = element_text(hjust = -0.3,
                                    face = "italic"),
       panel.grid.minor = element_blank(),
       panel.grid.major = element_blank(),
@@ -1069,7 +1081,7 @@ output$boxplot <- renderPlot({
 
   # Options
   
-  # Checkbox 2: add continent sizes to plot
+  # Checkbox: add continent sizes to plot
   if (input$group_size) {
     
     update_geom_defaults("text",
@@ -1086,9 +1098,8 @@ output$boxplot <- renderPlot({
 
 
 
-#######################
 ### Define map plot ###
-#######################
+
 
 
 output$map <- renderLeaflet({
@@ -1155,7 +1166,59 @@ output$map <- renderLeaflet({
 
   # call map object
   map_plot
+  
 
 })
+
+##  Define output for the quick facts text ##
+# Reference to figure out how to use HTML in Shiny: 
+# https://stackoverflow.com/questions/1956790/how-to-use-html-in-r-shiny
+
+# Social media
+
+
+output$quick_facts_social_media <- renderUI({
+  closest_p <- soc_media_stats |> 
+    filter(
+      # filter for the percentage chosen by the user
+      Percentage >= (input$quick_facts_percentage_sm)
+    ) |> 
+    select(Topic, Percentage) |> 
+    dplyr::arrange(Percentage) |> 
+    head(n = 1) # only want the closest percentage
+    
+  string <- HTML(paste0(
+    "<center>In 2020,<br><h3 style = 'color:#E74C3C;'>",
+    closest_p$Percentage,"</h3><br>", closest_p$Topic,".</center>"
+  ))
+
+  string
+})
+
+
+# Anxiety
+output$quick_facts_anxiety <- renderUI({
+  closest_p <- anxiety_stats |> 
+    filter(
+      Percentage >= (input$quick_facts_percentage_a)
+    ) |> 
+    select(Topic, Percentage) |> 
+    dplyr::arrange(Percentage) |> 
+    head(n = 1) 
+
+  string <- HTML(paste0(
+    "<center>In 2020,<br><h3 style = 'color:#E74C3C;'>",
+    closest_p$Percentage,"</h3><br>", closest_p$Topic,".<center>"
+  ))
+  
+  string
+})
+
+# Mental Health
+output$quick_facts_mental_health <- renderUI({
+  string <- HTML(paste0("<center>In 2020, about <br><h3 style = 'color:#E74C3C;'>", mh_stat ,"</h3><br> Agreed that Mental Health is <u>More or As Important as Physical Health</u> When Regarding One's Well-being.</center>"))
+})
+
+
 
 ```
