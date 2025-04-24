@@ -160,4 +160,16 @@ wgm20 <- read_excel(path = here("data",
   janitor::clean_names() |> 
   # keep only columns of interest
   select(wellcome_tag, question, x3, column_n_percent_4)
-    
+
+
+# Write into a csv
+write_csv(wgm20, here("docs",
+                      "data",
+                      "wgm20.csv"))
+
+
+
+
+
+
+

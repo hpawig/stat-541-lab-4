@@ -26,21 +26,43 @@ server: shiny
 ```{r}
 #| context: setup
 #| message: false
-#| label: packages
+#| label: load-packages
 # Package names
-packages <- c("tidyverse", "here", "readxl", "scales", "RColorBrewer", "leaflet",
-              "sf", "rnaturalearth", "countrycode", "plotly", "janitor",
-              "rnaturalearthdata", "readr", "kableExtra", "paletteer", "shiny")
+# packages <- c("tidyverse", "here", "readxl", "scales", "RColorBrewer", "leaflet",
+#               "sf", "rnaturalearth", "countrycode", "plotly", "janitor",
+#               "rnaturalearthdata", "readr", "kableExtra", "paletteer", "shiny")
+
+library(tidyverse)
+library(here)
+library(readr)
+library(scales)
+library(RColorBrewer)
+library(leaflet)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(countrycode)
+library(plotly)
+library(janitor)
+library(kableExtra)
+library(paletteer)
+library(shiny)
+library(readxl)
+
 
 
 # Install packages not yet installed
-installed_packages <- packages %in% rownames(installed.packages())
-if (any(installed_packages == FALSE)) {
-  install.packages(packages[!installed_packages])
-}
+# Run this code only once to install all packages
+# installed_packages <- packages %in% rownames(installed.packages())
+# if (any(installed_packages == FALSE)) {
+#   install.packages(packages[!installed_packages])
+# }
+# commenting this portion of code containing install.packages()
+# idea from: https://ubco-biology.github.io/BIOL202/trying-to-use-cran-without-setting-a-mirror.html
+# I was getting an error "trying to use CRAN without setting a mirror" 
 
 # Packages loading
-invisible(lapply(packages, library, character.only = TRUE))
+# invisible(lapply(packages, library, character.only = TRUE))
 ## package loading chunk idea from: 
 ## https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
 ```
@@ -49,9 +71,68 @@ invisible(lapply(packages, library, character.only = TRUE))
 #| context: setup
 #| label: load-custom-functions
 #| 
-# Load pre-made custom functions made in another file
-source(file = here("docs",
-            "server-fns.R"), encoding = "UTF-8")
+# Load custom functions 
+# This script holds all the customized functions needed for the UI/Server for my
+# Lab 4 shiny app
+
+
+
+# Function 1
+# This function takes in user input 'question_of_interest' and determines what question to focus on 
+find_mapQ <- function(input) {
+  question_pattern = ""
+  if (input == "Interest in Science") {
+    question_pattern = "Q8"
+  } else if (input == "Benefit of Science") {
+    question_pattern = "Q17"
+  } else if (input == "Hope in Scientists") {
+    question_pattern = "Q18"
+  } else {
+    # default is Q9
+    question_pattern = "Q9"
+  }
+  return(question_pattern)
+}
+
+# Function 2
+# Function takes in question pattern and creates map title.
+map_title_maker <- function(question_pattern) {
+  if (question_pattern == "Q8") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that are interested in science</div>
+      \n   (said 'Yes' on Question 8 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q9") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that are interested in health, disease, or medicine</div>
+      \n   (said 'Yes' on Question 9 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q17") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that say science benefits people like themselves in their country</div>
+      \n   (said 'Yes' on Question 17 in Gallup Poll 2018)"
+  } else if (question_pattern == "Q18") {
+    map_title = "<div style='font-size: 16px; font-weight: bold; margin: 5px;'>
+      Percentage of People that agree science and technology will improve life for next generatiions</div>
+      \n   (said 'Yes' on Question 18 in Gallup Poll 2018)"
+  }
+  return (map_title)
+  
+}
+
+
+
+# Function 3
+## CITATION (for adding n to boxplot):
+## https://waterdata.usgs.gov/blog/boxplots/
+
+# Run this custom function to get continent sizes
+# Takes in x, the group of interest
+# Returns a dataframe of:
+# The Label: group size, found by calculating the length of the vector containing
+# The y-coordinate: to position the label next to the corresponding boxplot
+n_fun <- function(x){
+  return(data.frame(y = 1.1,
+                    label = paste0("n = ", length(x))))
+}
 
 
 ```
@@ -61,7 +142,8 @@ source(file = here("docs",
 #| label: load-all-data
 
 ### DATASET 1: WGM 2018 ###
-wgm18 <- read_csv(file = here("data",
+wgm18 <- read_csv(file = here("docs",
+                              "data",
                               "wgm18.csv"))
 
 
@@ -87,26 +169,24 @@ wd_q25 <- wgm18 |>
 # Load WGM 2018 data dictionary  #
 
 data_dict <- read_csv(file = here(
+  "docs",
   "data",
   "wgm18_data_dict.csv"
 ))
 
 
 
-country_w_codes <- read_csv(file = here("data","country_w_codes.csv"))
+country_w_codes <- read_csv(file = here("docs","data","country_w_codes.csv"))
 
-regions_codes <- read_csv(file = here("data",
+regions_codes <- read_csv(file = here("docs","data",
                               "regions_codes.csv"))
 
 
 
 # read in 2020 crosstab data
-wgm20 <- read_excel(path = here("data",
-                                "wgm2020-mentalhealthmodule-crossnational-tabs.xlsx"),
-                    sheet = "Socio-economic & demographic",
-                    skip = 2, 
-                    col_names = TRUE) |> 
-  janitor::clean_names()
+wgm20 <- read_csv(file = here("docs",
+                              "data",
+                              "wgm20.csv"))
 
 
 
@@ -114,7 +194,8 @@ wgm20 <- read_excel(path = here("data",
 
 
 # create df with country and assigned region
-country_region <- read_csv(file = country_region, here("data",
+country_region <- read_csv(file = here("docs",
+                                       "data",
                               "country_region.csv"))
     
 
@@ -193,11 +274,8 @@ map_df <- wgm18 |>
 
 
 # Get world map data from Natural Earth
-world <- ne_countries(scale = "medium", # size
+world <- ne_countries(scale = "small", # size
                       returnclass = "sf") # output object
-
-
-
 
 
 
