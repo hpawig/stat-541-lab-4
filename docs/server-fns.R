@@ -58,3 +58,4 @@ map_title_maker <- function(question_pattern) {
 n_fun <- function(x){
   return(data.frame(y = 1.1,
                     label = paste0("n = ", length(x))))
+}

@@ -12,3 +12,4 @@ quarto_version: 1.7.23
 quarto_engines: knitr
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: data-preproc.R
