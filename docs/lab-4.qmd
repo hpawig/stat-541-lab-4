@@ -61,15 +61,8 @@ source(file = here("docs",
 #| label: load-all-data
 
 ### DATASET 1: WGM 2018 ###
-
-
-wgm18 <- read_excel(path = here("data", 
-                                "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-                    sheet = "Crosstabs all countries",
-                    skip = 2, 
-                    col_names = TRUE) |> 
-  fill(Question) |> 
-  clean_names()
+wgm18 <- read_csv(file = here("data",
+                              "wgm18.csv"))
 
 
 
@@ -87,84 +80,23 @@ wd_q25 <- wgm18 |>
     question == "Q25 Do you strongly or somewhat agree, strongly or somewhat disagree or neither agree nor disagree with the following statement? Vaccines are safe."
   )
 
-full_df_2018 <- read_excel(path = here ("data",
-                                        "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-                           sheet = "Full dataset",
-                           skip = 0,
-                           col_names = TRUE)
 
 
 
-#  WGM 2018 data dictionary  #
+
+# Load WGM 2018 data dictionary  #
+
+data_dict <- read_csv(file = here(
+  "data",
+  "wgm18_data_dict.csv"
+))
 
 
 
-data_dict <- read_excel(path = here("data",
-                                    "wgm2018-dataset-crosstabs-all-countries.xlsx"),
-                        sheet = "Data dictionary",
-                        skip = 0,
-                        col_names = TRUE) |> 
-  filter(
-    `Variable Name` %in% c('WP5', 'Regions_Report')
-  )
+country_w_codes <- read_csv(file = here("data","country_w_codes.csv"))
 
-
-# Creating a tibble of 2 columns: country codes and country names
-country_w_codes <- data_dict |> 
-  filter(`Variable Name` == "WP5") |> 
-  mutate(
-    country_code = str_split(
-      string = `Variable Type & Codes*`,
-      pattern = ",",
-      n = length(unique(full_df_2018$WP5)), 
-      simplify = TRUE
-    )
-    
-  ) |> 
-  janitor::clean_names() |> 
-  # drop first few columns; only need country name and code
-  select(-variable_type_codes, -variable_name, -variable_type_codes,
-         -variable_label_survey_question, -notes) |> 
-  unlist() |> # turns list into a column
-  as_tibble() |> 
-  rename(country = value) |> 
-  mutate(
-    code = str_split(country, "=", n = 2, simplify = TRUE)[, 1],
-    country = str_split(country, "=", n = 2, simplify = TRUE)[, 2],
-    country = str_remove(country, ","),
-    code = as.numeric(code)
-  )
-
-
-
-# create tibble with two columns: Region code and region name
-regions_codes <- data_dict |> 
-  filter(`Variable Name` == "Regions_Report") |> 
-  mutate(
-    country_code = str_split(
-      `Variable Type & Codes*`, 
-      ",", 
-      n = length(unique(full_df_2018$Regions_Report)), 
-      simplify = TRUE)
-    
-  ) |> 
-  
-  janitor::clean_names() |> 
-  # remove unnecessary columns
-  select(-variable_type_codes, -variable_name, -variable_type_codes,
-         -variable_label_survey_question, -notes) |> 
-  unlist() |> 
-  as_tibble() |> 
-  # Rename column
-  rename(region = value) |> 
-  # Separate region name and region code into two columns.
-  mutate(
-    code = str_split(region, "=", n = 2, simplify = TRUE)[, 1],
-    region = str_split(region, "=", n = 2, simplify = TRUE)[, 2],
-    region = str_remove(region, ","),
-    code = as.numeric(code)
-  )
-
+regions_codes <- read_csv(file = here("data",
+                              "regions_codes.csv"))
 
 
 
@@ -176,32 +108,15 @@ wgm20 <- read_excel(path = here("data",
                     col_names = TRUE) |> 
   janitor::clean_names()
 
-# Read in 2020 file
-wgm_full_df <- read_csv(here("data",
-                             "wgm_full_wave2_public_file_final (1)_csv.csv"))
-
-
 
 
 
 
 
 # create df with country and assigned region
-country_region <- full_df_2018 |> 
-  select(WP5, Regions_Report) |> 
-  distinct() |> 
-  left_join(country_w_codes, by = c("WP5" = "code")) |> 
-  left_join(regions_codes, by = c("Regions_Report" = "code")) |> 
-  select(country, region) |> 
-  # replace republic of congo and palestine to match Crosstab country list
-  mutate(
-    country = case_when(
-      str_detect(country, "Palestinian") ~ "Palestine",
-      country == "Republic of Congo" ~ "Congo, Rep.",
-      TRUE ~ country
-    )
-  )
-
+country_region <- read_csv(file = country_region, here("data",
+                              "country_region.csv"))
+    
 
 
 
@@ -1216,9 +1131,4 @@ output$quick_facts_anxiety <- renderUI({
 
 # Mental Health
 output$quick_facts_mental_health <- renderUI({
-  string <- HTML(paste0("<center>In 2020, about <br><h3 style = 'color:#E74C3C;'>", mh_stat ,"</h3><br> Agreed that Mental Health is <u>More or As Important as Physical Health</u> When Regarding One's Well-being.</center>"))
-})
-
-
-
-```
+  string <- HTML(paste0("<cent
