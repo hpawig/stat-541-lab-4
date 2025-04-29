@@ -891,4 +891,9 @@ output$quick_facts_anxiety <- renderUI({
 
 # Mental Health
 output$quick_facts_mental_health <- renderUI({
-  string <- HTML(paste0("<center>In 2020, about <br><h3 style = 'color:#E74C3C;'>", mh_stat ,"</h3><br> Agreed that Mental Health is <u>More or As Important as Physical Health</u> When Regarding One's We
+  string <- HTML(paste0("<center>In 2020, about <br><h3 style = 'color:#E74C3C;'>", mh_stat ,"</h3><br> Agreed that Mental Health is <u>More or As Important as Physical Health</u> When Regarding One's Well-Being.</center>"))
+})
+
+
+
+```
