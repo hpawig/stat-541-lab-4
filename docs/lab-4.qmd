@@ -27,7 +27,7 @@ server: shiny
 #| context: setup
 #| message: false
 #| label: load-packages
-# Code for Rcpp install is from classmate
+# Code for Rcpp install is from classmate -- only run once.
 # if (packageVersion("Rcpp") >= "1.0.12") {
 #   devtools::install_version(
 #     "Rcpp", version = "1.0.14",
@@ -35,21 +35,18 @@ server: shiny
 #   )
 # }
 
-# Install older version of terra... idea from Gemini
+# Install an older version of terra... idea from Gemini
+# Shiny may not have required dependencies to build the newest version
 if(!requireNamespace("terra", quietly = TRUE)) {
   # options(repos = c(CRAN = "https://cloud.r-project.org"))
   devtools::install_version(
-    "terra", version = "1.8-21", #using older version
+    "terra", version = "1.8-21",  # Using older version
     repos = "https://cloud.r-project.org"
   )
 }
+
+# Load packages
 library(terra)
-
-# Package names
-# packages <- c("tidyverse", "here", "readxl", "scales", "RColorBrewer", "leaflet",
-#               "sf", "rnaturalearth", "countrycode", "plotly", "janitor",
-#               "rnaturalearthdata", "readr", "kableExtra", "paletteer", "shiny", "terra")
-
 library(tidyverse)
 library(here)
 library(readr)
@@ -78,17 +75,9 @@ library(readxl)
 # idea from: https://ubco-biology.github.io/BIOL202/trying-to-use-cran-without-setting-a-mirror.html
 # I was getting an error "trying to use CRAN without setting a mirror" 
 
-# Packages loading
-# invisible(lapply(packages, library, character.only = TRUE))
-## package loading chunk idea from: 
-## https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
 
-
-# Load custom functions 
-# This script holds all the customized functions needed for the UI/Server for my
-# Lab 4 shiny app
-
-
+### Load custom functions 
+## These functions are used to create the map title and to get the continent sizes for the boxplot
 
 # Function 1
 # This function takes in user input 'question_of_interest' and determines what question to focus on 
@@ -154,190 +143,105 @@ n_fun <- function(x){
 #| context: setup
 #| label: load-all-data
 
-### DATASET 1: WGM 2018 ###
-# wgm18 <- read_csv(file = here("docs",
-#                               "data",
-#                               "wgm18.csv"))
+# The dataframes read in within this code chunk were created from the raw data files and
+# pre-processed in the R file named "data-preproc.R" found in the same directory as this 
+# file. The dataframes are saved as csv files and read in here.
 
-wgm18 <- read_csv(file = #here(
-  "wgm18.csv")
- # )
+### DATASET 1: WGM 2018
 
+wgm18 <- read_csv(file = "wgm18.csv")
 
+### Load WGM 2018 data dictionary 
 
+data_dict <- read_csv(file = "wgm18_data_dict.csv")
 
-# Load WGM 2018 data dictionary  #
-
-data_dict <- read_csv(file = #here(
-  # "docs",
-  # "data",
-  "wgm18_data_dict.csv")
-#))
+### Read in dataframe with country names + codes
+country_w_codes <- read_csv(file = "country_w_codes.csv")
 
 
-
-country_w_codes <- read_csv(file = #here(
-  #"docs","data",
-  "country_w_codes.csv")
-  #)
-
-regions_codes <- read_csv(file = #here(
-  # "docs","data",
-    "regions_codes.csv")
-#)
+### Read in dataframe with country names + WGM-assigned region code
+regions_codes <- read_csv(file = "regions_codes.csv")
 
 
-
-# read in 2020 crosstab data
-wgm20 <- read_csv(file = #here(
-  # "docs",
-  # "data",
-  "wgm20.csv")
-  #)
+### Read in 2020 crosstabular data
+wgm20 <- read_csv(file = "wgm20.csv")
 
 
-
-
-
-
-# create df with country and assigned region
-country_region <- read_csv(file = #here(
-  # "docs", "data",
-  "country_region.csv")
-#)
+### Read in df with country and assigned region
+country_region <- read_csv(file = "country_region.csv")
     
+### Read in df used for boxplot
+plot_df <- read_csv(file = "plot_df.csv")
 
 
 
-# read in dataframe for boxplot 
-plot_df <- read_csv(
-  file = #here("docs","data",
-              "plot_df.csv")
-  #)
-
-
-
-# MAP DATA
-
-
-map_df <- read_csv(file = #here("docs",
-                               #"data",
-                               "wgm18_map.csv")
-#)
-
+### Read in df used for Map plot
+map_df <- read_csv(file = "wgm18_map.csv")
 
 
 # Get world map data from Natural Earth
+# necessary for leaflet plot
 world <- ne_countries(scale = "small", # size
                       returnclass = "sf") # output object
 
 
+### Start loading: Vaccine Page Dataframes 
 
-## Start: Vaccine Page Dataframes 
+# Read in csv of Q6 & Q8 "Yes" responses.
+q6_8_data <- read_csv(file = "wgm18_q6_8.csv")
 
-
-# Read in csv of Q6 & Q8 data
-q6_8_data <- read_csv(file = #here("docs",
-                                    #"data",
-                                    "wgm18_q6_8.csv")
-#)
-
-# Read in 2018 medians for question 6 and question 8 
-
-medians_science <- read_csv(file = #here("docs",
-                                        #"data",
-                                        "wgm18_q6_8_medians.csv")
-#)
+### Read in 2018 medians for "Yes" responses to Q6 and Q8 
+medians_science <- read_csv(file = "wgm18_q6_8_medians.csv")
 
 
 
+### Health, Disease and Medicine Interest Dataframes
 
 
-
-
-##       Health, Disease and Medicine Interest Dataframes       ##
-
-
-# Create a data frame with the country percentages of:
+# Read in data frame of:
 # People who have sought information about Health, Medicine, and Disease (Q7)
 # People who say they're interested in Health, Medicine, and Disease (Q9) 
-
-health_interest <- read_csv(file = #here("docs", 
-                                        #"data",
-                                        "wgm18_q7_9.csv")
-#)
+health_interest <- read_csv(file = "wgm18_q7_9.csv")
 
 
-# Calculate Medians for Health, Medicine, and Disease percentages
-medians_hmd <- read_csv(
-  file = #here("docs", 
-              #"data", 
-              "wgm18_q7_9_medians.csv")
-  #)
+# Calculate Medians for Health, Medicine, and Disease "yes" response percentages
+medians_hmd <- read_csv(file = "wgm18_q7_9_medians.csv")
 
 
+### Mental Health Page Dataframes
+
+### Read in SOCIAL MEDIA df
+soc_media_stats <- read_csv(file = "wgm20_social_media.csv")
 
 
-##                Mental Health Page Dataframes                ##
+### Read in Anxiety dataframe table
+anxiety_stats <- read_csv(file = "wgm20_anxiety.csv")
 
 
-# SOCIAL MEDIA
-soc_media_stats <- read_csv(file =# here(#"docs", 
-                                        #"data", 
-                                        "wgm20_social_media.csv")
-#)
-
-
-
-# ANXIETY
-# read in anxiety dataframe table
-anxiety_stats <- read_csv(file = #here(#"docs",
-                              #"data",
-                              "wgm20_anxiety.csv")
-#)
+# Read in mental health dataframe table
+mental_health <- read_csv(file = "wgm20_mental_health.csv")
 
 
 
 
-
-# MENTAL HEALTH
-# read in mental health dataframe table
-mental_health <- read_csv(file = #here("docs",
-                              #"data",
-                              "wgm20_mental_health.csv")
-                          #)
+### Read in 2020 data on opinion about national government funding research on cancer and/or anxiety
 
 
+wgm20_govt <- read_csv(file = "wgm20_govt.csv")
+
+### Read in 2020 data on opinion about mental health
+
+mh_stat <- read_csv(file = "wgm20_mental_health.csv") |> 
+  pull() # only want the value, not as a tibble
 
 
-# Read in 2020 data on opinion about national government funding research on cancer and/or anxiety
+### Read in 2018 table on last page
+wgm18_Q21 <- read_csv(file = "wgm18_Q21.csv")
 
+### Read in 2020 table on last page
 
-wgm20_govt <- read_csv(file = # here("docs",
-                                   #"data", 
-                                   "wgm20_govt.csv")
-#)
+wgm20_govt <- read_csv(file = "wgm20_govt.csv")
 
-# Read in 2020 data on opinion about mental health
-mh_stat <- read_csv(file = #here("docs",
-                                  #"data", 
-                                  "wgm20_mental_health.csv") |> 
-                   # ) |>  
-  pull()
-
-
-# Read in 2018 table on last page
-wgm18_Q21 <- read_csv(file = # here("docs",
-              #"data",
-              "wgm18_Q21.csv")
-#)
-
-# Read in 2020 table on last page
-
-wgm20_govt <- read_csv(file = #here("docs",
-              #"data",
-              "wgm20_govt.csv")
-#)
 ```
 
 # 2018 Opinion: Vaccines
