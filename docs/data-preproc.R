@@ -35,7 +35,7 @@ wgm18 <- read_excel(path = here("data",
 
 # create a csv of this dataframe
 write_csv(wgm18, here("docs",
-                      "data",
+                      # "data",
                       "wgm18.csv"))
 
 
@@ -64,7 +64,7 @@ data_dict <- read_excel(path = here("data",
 
 # create a csv of this dataframe
 write_csv(data_dict, here("docs",
-                          "data",
+                          # "data",
                       "wgm18_data_dict.csv"))
 
 
@@ -97,7 +97,7 @@ country_w_codes <- data_dict |>
 
 
 write_csv(country_w_codes, here("docs", 
-                                #"data",
+                                # "data",
                               "country_w_codes.csv"))
 
 
@@ -133,7 +133,7 @@ regions_codes <- data_dict |>
 
 # create a csv of this dataframe
 write_csv(regions_codes, here("docs",
-                              #"data",
+                              # "data",
                        "regions_codes.csv"))
 
 
@@ -158,7 +158,7 @@ country_region <- read_excel(path = here ("data",
 
 # create a country_region csv
 write_csv(country_region, here("docs",
-                               "data",
+                               # "data",
                               "country_region.csv"))
     
     
@@ -211,7 +211,7 @@ plot_df <- plot_df |>
 
 # save as a csv file
 write_csv(plot_df, here("docs",
-                        "data",
+                        # "data",
                         "plot_df.csv"))
 
 
@@ -229,7 +229,7 @@ wgm20 <- read_excel(path = here("data",
 
 # Write into a csv
 write_csv(wgm20, here("docs",
-                      "data",
+                      # "data",
                       "wgm20.csv"))
 
 
@@ -324,7 +324,7 @@ q6_8_data <- q6_8_data |>
 
 # Save all data for questions 6-8 into a csv
 write_csv(q6_8_data, here("docs",
-                              "data",
+                              # "data",
                               "wgm18_q6_8.csv"))
 
 # 2018 medians for question 6 and question 8 
@@ -341,7 +341,7 @@ medians_science <- q6_8_data |>
 
 # save into a csv
 write_csv(medians_science, here("docs",
-                              "data",
+                              # "data",
                               "wgm18_q6_8_medians.csv"))
 
 
@@ -464,7 +464,7 @@ map_df <- wgm18 |>
 
 
 write_csv(map_df, here("docs",
-                       "data",
+                       # "data",
                        "wgm18_map.csv"))
 
 
@@ -482,11 +482,11 @@ medians_hmd <- health_interest |>
 
 # Save dataframes into a csv
 write_csv(health_interest, file = here("docs",
-                              "data",
+                              # "data",
                               "wgm18_q7_9.csv"))
 
 write_csv(medians_hmd, here("docs",
-                              "data",
+                              # "data",
                               "wgm18_q7_9_medians.csv"))
 
 
@@ -537,7 +537,7 @@ soc_media_stats <- social_media |>
 
 
 write_csv(soc_media_stats, here("docs",
-                              "data",
+                              # "data",
                               "wgm20_social_media.csv"))
 
 # ANXIETY
@@ -589,7 +589,7 @@ anxiety_stats <- wgm20 |>
 
 # write anxiety table as a CSV
 write_csv(anxiety_stats, here("docs",
-                              "data",
+                              # "data",
                               "wgm20_anxiety.csv"))
 
 
@@ -622,7 +622,7 @@ mh_stat <- wgm20 |>
 
 
 write_csv(mh_stat, here("docs",
-                              "data",
+                              # "data",
                               "wgm20_mental_health.csv"))
 
 
@@ -658,7 +658,7 @@ wgm18_Q21 <- wgm18 |>
 # Save into a csv
 write_csv(wgm18_Q21,
           here("docs",
-              "data",
+              # "data",
               "wgm18_Q21.csv"))
 
 # 2020 data on opinion about national government funding research on cancer and/or anxiety
@@ -686,5 +686,4 @@ wgm20_govt <- wgm20 |>
 
 write_csv(wgm20_govt,
           here("docs",
-              "data",
-              "wgm20_govt.csv"))
+              # "data",

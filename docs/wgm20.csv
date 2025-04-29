@@ -1,0 +1,233 @@
+wellcome_tag,question,x3,column_n_percent_4
+MH2A,How Much Science Can Explain How the Human Body Works,A lot,0.46144337872567903
+MH2A,How Much Science Can Explain How the Human Body Works,Some,0.29747233578383897
+MH2A,How Much Science Can Explain How the Human Body Works,Not much,0.06965875511198473
+MH2A,How Much Science Can Explain How the Human Body Works,Not at all,0.03292976461752681
+MH2A,How Much Science Can Explain How the Human Body Works,DK/Refused,0.1384957657609732
+MH2B,How Much Science Can Explain How Feelings and Emotions Work,A lot,0.2675667716374324
+MH2B,How Much Science Can Explain How Feelings and Emotions Work,Some,0.3709426370832232
+MH2B,How Much Science Can Explain How Feelings and Emotions Work,Not much,0.1306542385201529
+MH2B,How Much Science Can Explain How Feelings and Emotions Work,Not at all,0.0773578304054864
+MH2B,How Much Science Can Explain How Feelings and Emotions Work,DK/Refused,0.1534785223536938
+MH1,Importance of Mental Health For Well-Being,More important,0.4551575770920199
+MH1,Importance of Mental Health For Well-Being,As important,0.45941072617795553
+MH1,Importance of Mental Health For Well-Being,Less important,0.05470043149376154
+MH1,Importance of Mental Health For Well-Being,DK/Refused,0.03073126523627463
+MH3A,How Much Science Helps to Treat Cancer,A lot,0.4897097806653332
+MH3A,How Much Science Helps to Treat Cancer,Some,0.32862230869279246
+MH3A,How Much Science Helps to Treat Cancer,Not much,0.08071837985903835
+MH3A,How Much Science Helps to Treat Cancer,Not at all,0.04797371252193191
+MH3A,How Much Science Helps to Treat Cancer,DK/Refused,0.052975818260909587
+MH3B,How Much Science Helps to Treat Anxiety or Depression,A lot,0.30882071954036006
+MH3B,How Much Science Helps to Treat Anxiety or Depression,Some,0.39713153525759326
+MH3B,How Much Science Helps to Treat Anxiety or Depression,Not much,0.13613247961938052
+MH3B,How Much Science Helps to Treat Anxiety or Depression,Not at all,0.07816537433650014
+MH3B,How Much Science Helps to Treat Anxiety or Depression,DK/Refused,0.07974989124615547
+MH3C,How Much Science Helps to Treat Infectious Diseases,A lot,0.5332511756728057
+MH3C,How Much Science Helps to Treat Infectious Diseases,Some,0.2730259913288016
+MH3C,How Much Science Helps to Treat Infectious Diseases,Not much,0.07201337546829746
+MH3C,How Much Science Helps to Treat Infectious Diseases,Not at all,0.05521541625529205
+MH3C,How Much Science Helps to Treat Infectious Diseases,DK/Refused,0.06649404127481111
+MH3D,How Much Science Helps to Treat Obesity,A lot,0.30073903373607797
+MH3D,How Much Science Helps to Treat Obesity,Some,0.3548430767327871
+MH3D,How Much Science Helps to Treat Obesity,Not much,0.15476370056753078
+MH3D,How Much Science Helps to Treat Obesity,Not at all,0.10393356953753129
+MH3D,How Much Science Helps to Treat Obesity,DK/Refused,0.08572061942606637
+MH4A,Important for National Govt to Fund Research on Cancer,Extremely important,0.6869125285085453
+MH4A,Important for National Govt to Fund Research on Cancer,Somewhat important,0.21402978804696665
+MH4A,Important for National Govt to Fund Research on Cancer,Not too important,0.02706483845405881
+MH4A,Important for National Govt to Fund Research on Cancer,Not important at all,0.02980152771970141
+MH4A,Important for National Govt to Fund Research on Cancer,DK/Refused,0.04219131727073119
+MH4B,Important for National Govt to Fund Research on Anxiety/Depression,Extremely important,0.4930038538506912
+MH4B,Important for National Govt to Fund Research on Anxiety/Depression,Somewhat important,0.3231602904758628
+MH4B,Important for National Govt to Fund Research on Anxiety/Depression,Not too important,0.07029544754637312
+MH4B,Important for National Govt to Fund Research on Anxiety/Depression,Not important at all,0.04977378082170324
+MH4B,Important for National Govt to Fund Research on Anxiety/Depression,DK/Refused,0.06376662730536224
+MH5,Someone Local Comfortable Speaking About Anxiety/Depression,Very comfortable,0.23619027814472682
+MH5,Someone Local Comfortable Speaking About Anxiety/Depression,Somewhat comfortable,0.3682922291948955
+MH5,Someone Local Comfortable Speaking About Anxiety/Depression,Not at all comfortable,0.2790429144450501
+MH5,Someone Local Comfortable Speaking About Anxiety/Depression,DK/Refused,0.11647457821532199
+MH6,Friends/Family Have Been Anxious/Depressed,Yes,0.3279966434044653
+MH6,Friends/Family Have Been Anxious/Depressed,No,0.6298463021634619
+MH6,Friends/Family Have Been Anxious/Depressed,DK/Refused,0.042157054432069435
+MH7A,Have Been Anxious/Depressed,Yes,0.19017418200268169
+MH7A,Have Been Anxious/Depressed,No,0.783926071357349
+MH7A,Have Been Anxious/Depressed,DK/Refused,0.025899746639973156
+"mh_experience Level of experience with anxiety/depression -- none, indirect or direct","mh_experience Level of experience with anxiety/depression -- none, indirect or direct",No experience,0.6159133394005732
+"mh_experience Level of experience with anxiety/depression -- none, indirect or direct","mh_experience Level of experience with anxiety/depression -- none, indirect or direct",Indirect experience,0.19391247859675076
+"mh_experience Level of experience with anxiety/depression -- none, indirect or direct","mh_experience Level of experience with anxiety/depression -- none, indirect or direct",Direct experience,0.19017418200268169
+MH7B,Age When First Felt Anxious/Depressed,1,1.390776709524822e-4
+MH7B,Age When First Felt Anxious/Depressed,2,0.0011630523884321742
+MH7B,Age When First Felt Anxious/Depressed,3,3.774549704476025e-4
+MH7B,Age When First Felt Anxious/Depressed,4,4.436547428398498e-4
+MH7B,Age When First Felt Anxious/Depressed,5,0.0032814470633649663
+MH7B,Age When First Felt Anxious/Depressed,6,0.006211192228769411
+MH7B,Age When First Felt Anxious/Depressed,7,0.0028072721135499247
+MH7B,Age When First Felt Anxious/Depressed,8,0.006061347861332229
+MH7B,Age When First Felt Anxious/Depressed,9,0.003343409182802092
+MH7B,Age When First Felt Anxious/Depressed,10,0.012831200466845872
+MH7B,Age When First Felt Anxious/Depressed,11,0.0052011204333188635
+MH7B,Age When First Felt Anxious/Depressed,12,0.020106517922915776
+MH7B,Age When First Felt Anxious/Depressed,13,0.02029937391654219
+MH7B,Age When First Felt Anxious/Depressed,14,0.0258385643172327
+MH7B,Age When First Felt Anxious/Depressed,15,0.06075872024273201
+MH7B,Age When First Felt Anxious/Depressed,16,0.03764768031648549
+MH7B,Age When First Felt Anxious/Depressed,17,0.03950352593740913
+MH7B,Age When First Felt Anxious/Depressed,18,0.05657400949299292
+MH7B,Age When First Felt Anxious/Depressed,19,0.032199381892411706
+MH7B,Age When First Felt Anxious/Depressed,20,0.054640805417406055
+MH7B,Age When First Felt Anxious/Depressed,21,0.024491339278604415
+MH7B,Age When First Felt Anxious/Depressed,22,0.03193018086485703
+MH7B,Age When First Felt Anxious/Depressed,23,0.018083383338565517
+MH7B,Age When First Felt Anxious/Depressed,24,0.023114696835279842
+MH7B,Age When First Felt Anxious/Depressed,25,0.04875909780649169
+MH7B,Age When First Felt Anxious/Depressed,26,0.013093020016752917
+MH7B,Age When First Felt Anxious/Depressed,27,0.012645429861335301
+MH7B,Age When First Felt Anxious/Depressed,28,0.0183849311461942
+MH7B,Age When First Felt Anxious/Depressed,29,0.012695645176618702
+MH7B,Age When First Felt Anxious/Depressed,30,0.05290396784019169
+MH7B,Age When First Felt Anxious/Depressed,31,0.008057104560552275
+MH7B,Age When First Felt Anxious/Depressed,32,0.01772034383505307
+MH7B,Age When First Felt Anxious/Depressed,33,0.01355730179549742
+MH7B,Age When First Felt Anxious/Depressed,34,0.010140985189763817
+MH7B,Age When First Felt Anxious/Depressed,35,0.027652734027275923
+MH7B,Age When First Felt Anxious/Depressed,36,0.009580267381253171
+MH7B,Age When First Felt Anxious/Depressed,37,0.006812438770907491
+MH7B,Age When First Felt Anxious/Depressed,38,0.014820787790891778
+MH7B,Age When First Felt Anxious/Depressed,39,0.004976163070587818
+MH7B,Age When First Felt Anxious/Depressed,40,0.033841950803462466
+MH7B,Age When First Felt Anxious/Depressed,41,0.00375139616697434
+MH7B,Age When First Felt Anxious/Depressed,42,0.009589076607395457
+MH7B,Age When First Felt Anxious/Depressed,43,0.00514088672887724
+MH7B,Age When First Felt Anxious/Depressed,44,0.004566362491557386
+MH7B,Age When First Felt Anxious/Depressed,45,0.017960092051150765
+MH7B,Age When First Felt Anxious/Depressed,46,0.005804361394633176
+MH7B,Age When First Felt Anxious/Depressed,47,0.007917511287695128
+MH7B,Age When First Felt Anxious/Depressed,48,0.007950764933170297
+MH7B,Age When First Felt Anxious/Depressed,49,0.005625193620930977
+MH7B,Age When First Felt Anxious/Depressed,50,0.020621662336019746
+MH7B,Age When First Felt Anxious/Depressed,51,0.0037049560788663645
+MH7B,Age When First Felt Anxious/Depressed,52,0.003535327593736888
+MH7B,Age When First Felt Anxious/Depressed,53,0.0017544885562232617
+MH7B,Age When First Felt Anxious/Depressed,54,0.003101815592165559
+MH7B,Age When First Felt Anxious/Depressed,55,0.007684938047477577
+MH7B,Age When First Felt Anxious/Depressed,56,0.0024749807817378146
+MH7B,Age When First Felt Anxious/Depressed,57,0.002268090853751926
+MH7B,Age When First Felt Anxious/Depressed,58,0.002343934052402008
+MH7B,Age When First Felt Anxious/Depressed,59,0.001961165024853108
+MH7B,Age When First Felt Anxious/Depressed,60,0.005279103318363356
+MH7B,Age When First Felt Anxious/Depressed,61,6.692315037775704e-4
+MH7B,Age When First Felt Anxious/Depressed,62,0.0014787266603556578
+MH7B,Age When First Felt Anxious/Depressed,63,0.0030167140687177713
+MH7B,Age When First Felt Anxious/Depressed,64,0.001636936703278564
+MH7B,Age When First Felt Anxious/Depressed,65,0.003593297045031552
+MH7B,Age When First Felt Anxious/Depressed,66,7.895102838545903e-4
+MH7B,Age When First Felt Anxious/Depressed,67,5.588986828038796e-4
+MH7B,Age When First Felt Anxious/Depressed,68,0.0026415141302549307
+MH7B,Age When First Felt Anxious/Depressed,69,2.1750004273594223e-4
+MH7B,Age When First Felt Anxious/Depressed,70,0.004096818945567494
+MH7B,Age When First Felt Anxious/Depressed,71,5.292013075402739e-4
+MH7B,Age When First Felt Anxious/Depressed,72,2.7976238127103923e-4
+MH7B,Age When First Felt Anxious/Depressed,73,4.5362156002478027e-4
+MH7B,Age When First Felt Anxious/Depressed,74,6.730166407024137e-5
+MH7B,Age When First Felt Anxious/Depressed,75,4.446417554142364e-4
+MH7B,Age When First Felt Anxious/Depressed,76,8.585652013201382e-5
+MH7B,Age When First Felt Anxious/Depressed,77,1.3681256730191577e-4
+MH7B,Age When First Felt Anxious/Depressed,78,1.1162234758135162e-4
+MH7B,Age When First Felt Anxious/Depressed,79,1.1551788232925028e-4
+MH7B,Age When First Felt Anxious/Depressed,80,4.775953335696074e-4
+MH7B,Age When First Felt Anxious/Depressed,81,8.361011534068738e-5
+MH7B,Age When First Felt Anxious/Depressed,82,2.227621793914309e-5
+MH7B,Age When First Felt Anxious/Depressed,83,4.989893603025804e-5
+MH7B,Age When First Felt Anxious/Depressed,84,1.6777575283108987e-5
+MH7B,Age When First Felt Anxious/Depressed,85,1.7166100286048974e-4
+MH7B,Age When First Felt Anxious/Depressed,87,4.121793545448638e-6
+MH7B,Age When First Felt Anxious/Depressed,88,4.3200069486968095e-6
+MH7B,Age When First Felt Anxious/Depressed,97+,1.3604363885054305e-4
+MH7B,Age When First Felt Anxious/Depressed,DK/Refused,0.06238352384066705
+MH7B_2,Age Range When First Felt Anxious/Depressed,Less than 13 years old,0.07505347793267725
+MH7B_2,Age Range When First Felt Anxious/Depressed,Ages 13 - 19,0.11454613005641008
+MH7B_2,Age Range When First Felt Anxious/Depressed,Ages 20 - 29,0.22213495947839715
+MH7B_2,Age Range When First Felt Anxious/Depressed,Ages 30 - 39,0.12515957329711863
+MH7B_2,Age Range When First Felt Anxious/Depressed,Age 40 or older,0.11407292561997312
+MH7B_2,Age Range When First Felt Anxious/Depressed,DK/Refused,0.3490329336154211
+MH7C,Have Felt Anxious/Depressed More Than Once,Yes,0.7299398705349825
+MH7C,Have Felt Anxious/Depressed More Than Once,No,0.255414363431987
+MH7C,Have Felt Anxious/Depressed More Than Once,DK/Refused,0.0146457660330171
+MH8A,Talked to Mental Health Professional When Anxious/Depressed,Yes,0.4338287036964486
+MH8A,Talked to Mental Health Professional When Anxious/Depressed,No,0.5527504898103733
+MH8A,Talked to Mental Health Professional When Anxious/Depressed,DK/Refused,0.01342080649314793
+MH8B,Engaged in Religious/Spiritual Activities When Anxious/Depressed,Yes,0.43077441916846865
+MH8B,Engaged in Religious/Spiritual Activities When Anxious/Depressed,No,0.5634117694529867
+MH8B,Engaged in Religious/Spiritual Activities When Anxious/Depressed,DK/Refused,0.005813811378515292
+MH8C,Talked to Friends or Family When Anxious/Depressed,Yes,0.780198352838984
+MH8C,Talked to Friends or Family When Anxious/Depressed,No,0.21358011755412867
+MH8C,Talked to Friends or Family When Anxious/Depressed,DK/Refused,0.006221529606882174
+MH8D,Took Prescribed Medication When Anxious/Depressed,Yes,0.488528549443028
+MH8D,Took Prescribed Medication When Anxious/Depressed,No,0.5028947307224485
+MH8D,Took Prescribed Medication When Anxious/Depressed,DK/Refused,0.008576719834493698
+MH8E,Improved Healthy Lifestyle Behaviors When Anxious/Depressed,Yes,0.7266484225287403
+MH8E,Improved Healthy Lifestyle Behaviors When Anxious/Depressed,No,0.2652979908896414
+MH8E,Improved Healthy Lifestyle Behaviors When Anxious/Depressed,DK/Refused,0.008053586581609767
+MH8F,Made a Change to Work Situation When Anxious/Depressed,Yes,0.5342497752455461
+MH8F,Made a Change to Work Situation When Anxious/Depressed,No,0.4531140280418974
+MH8F,Made a Change to Work Situation When Anxious/Depressed,DK/Refused,0.012636196712527224
+MH8G,Made a Change to Personal Relationships When Anxious/Depressed,Yes,0.6249682573463515
+MH8G,Made a Change to Personal Relationships When Anxious/Depressed,No,0.35214813307844794
+MH8G,Made a Change to Personal Relationships When Anxious/Depressed,DK/Refused,0.0228836095751773
+MH8H,Spent Time in Nature/The Outdoors When Anxious/Depressed,Yes,0.7110655265600064
+MH8H,Spent Time in Nature/The Outdoors When Anxious/Depressed,No,0.2822234378385534
+MH8H,Spent Time in Nature/The Outdoors When Anxious/Depressed,DK/Refused,0.006711035601434712
+MH9A,How Helpful Was Talking to Mental Health Professional When Anxious/Depressed,Very helpful,0.5939289193583348
+MH9A,How Helpful Was Talking to Mental Health Professional When Anxious/Depressed,Somewhat helpful,0.29762931542858195
+MH9A,How Helpful Was Talking to Mental Health Professional When Anxious/Depressed,Not helpful,0.09314700413986038
+MH9A,How Helpful Was Talking to Mental Health Professional When Anxious/Depressed,DK/Refused,0.0152947610732261
+MH9B,How Helpful Was Engaging in Religious or Spiritual Activities When Anxious/Depressed,Very helpful,0.5963824692257423
+MH9B,How Helpful Was Engaging in Religious or Spiritual Activities When Anxious/Depressed,Somewhat helpful,0.30203382486244607
+MH9B,How Helpful Was Engaging in Religious or Spiritual Activities When Anxious/Depressed,Not helpful,0.08679548583138173
+MH9B,How Helpful Was Engaging in Religious or Spiritual Activities When Anxious/Depressed,DK/Refused,0.014788220080437182
+MH9C,How Helpful Was Talking to Friends or Family When Anxious/Depressed,Very helpful,0.6299666053198638
+MH9C,How Helpful Was Talking to Friends or Family When Anxious/Depressed,Somewhat helpful,0.30983642845363274
+MH9C,How Helpful Was Talking to Friends or Family When Anxious/Depressed,Not helpful,0.05199513269086042
+MH9C,How Helpful Was Talking to Friends or Family When Anxious/Depressed,DK/Refused,0.008201833535616562
+MH9D,How Helpful Was Taking Prescribed Medication When Anxious/Depressed,Very helpful,0.5255019757300257
+MH9D,How Helpful Was Taking Prescribed Medication When Anxious/Depressed,Somewhat helpful,0.35140599189343263
+MH9D,How Helpful Was Taking Prescribed Medication When Anxious/Depressed,Not helpful,0.10920667183643666
+MH9D,How Helpful Was Taking Prescribed Medication When Anxious/Depressed,DK/Refused,0.01388536054010671
+MH9E,How Helpful Was Improving Healthy Lifestyle Behaviors When Anxious/Depressed,Very helpful,0.6568130586863429
+MH9E,How Helpful Was Improving Healthy Lifestyle Behaviors When Anxious/Depressed,Somewhat helpful,0.27758204921982854
+MH9E,How Helpful Was Improving Healthy Lifestyle Behaviors When Anxious/Depressed,Not helpful,0.05508985960277653
+MH9E,How Helpful Was Improving Healthy Lifestyle Behaviors When Anxious/Depressed,DK/Refused,0.010515032491025747
+MH9F,How Helpful Was Making a Change to Work Situation When Anxious/Depressed,Very helpful,0.5570613486726355
+MH9F,How Helpful Was Making a Change to Work Situation When Anxious/Depressed,Somewhat helpful,0.3320300159659891
+MH9F,How Helpful Was Making a Change to Work Situation When Anxious/Depressed,Not helpful,0.10118252485392525
+MH9F,How Helpful Was Making a Change to Work Situation When Anxious/Depressed,DK/Refused,0.009726110507455721
+MH9G,How Helpful Was Making a Change to Personal Relationships When Anxious/Depressed,Very helpful,0.5806513374827645
+MH9G,How Helpful Was Making a Change to Personal Relationships When Anxious/Depressed,Somewhat helpful,0.32080130269093843
+MH9G,How Helpful Was Making a Change to Personal Relationships When Anxious/Depressed,Not helpful,0.08607376343289609
+MH9G,How Helpful Was Making a Change to Personal Relationships When Anxious/Depressed,DK/Refused,0.012473596393390489
+MH9H,How Helpful Was Spending Time in Nature/The Outdoors When Anxious/Depressed,Very helpful,0.6730785363597246
+MH9H,How Helpful Was Spending Time in Nature/The Outdoors When Anxious/Depressed,Somewhat helpful,0.27252688307642914
+MH9H,How Helpful Was Spending Time in Nature/The Outdoors When Anxious/Depressed,Not helpful,0.047658052527768134
+MH9H,How Helpful Was Spending Time in Nature/The Outdoors When Anxious/Depressed,DK/Refused,0.006736528036044567
+W27,Used Social Media in Past 30 Days,Yes,0.6898605632486037
+W27,Used Social Media in Past 30 Days,No,0.3000914596995056
+W27,Used Social Media in Past 30 Days,DK/Refused,0.010047977051886016
+W28,How Often Use Social Media,Several times an hour,0.1743036974167542
+W28,How Often Use Social Media,Almost every hour,0.12363695610591138
+W28,How Often Use Social Media,Several times a day,0.4092094188849703
+W28,How Often Use Social Media,Once a day,0.12443356655157282
+W28,How Often Use Social Media,A few days a week,0.06416023991695526
+W28,How Often Use Social Media,Less frequently,0.08597321238883714
+W28,How Often Use Social Media,DK/Refused,0.018282908734980865
+W29,How Often See Information About Health on Social Media,All of the time,0.09105762869616794
+W29,How Often See Information About Health on Social Media,Most of the time,0.1669992441678173
+W29,How Often See Information About Health on Social Media,Some of the time,0.5938245007827683
+W29,How Often See Information About Health on Social Media,Never,0.13838805774519938
+W29,How Often See Information About Health on Social Media,DK/Refused,0.009730568608030217
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),Less than 13 years old,0.0666480431504289
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),Ages 13-19,0.2799828781711153
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),Ages 20-29,0.27170083429435654
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),Ages 30-39,0.17403466639678597
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),Age 40 or older,0.18589099241677703
+age_mh,Age first experienced anxiety/depression (combined WP21101 & WP21102 responses),DK/Refused,0.021742585570511456

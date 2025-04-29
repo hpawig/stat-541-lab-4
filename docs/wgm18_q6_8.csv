@@ -1,0 +1,146 @@
+country,region,Q6,Q8,isWorld
+Afghanistan,South Asia,8,69,FALSE
+Albania,Southern Europe,33,82,FALSE
+Algeria,North Africa,27,56.00000000000001,FALSE
+Argentina,South America,30,67,FALSE
+Armenia,Central Asia,34,73,FALSE
+Australia,Australia/New Zealand,48,60,FALSE
+Austria,Western Europe,46,53,FALSE
+Azerbaijan,Central Asia,28.000000000000004,56.99999999999999,FALSE
+Bangladesh,South Asia,20,69,FALSE
+Belarus,Eastern Europe,26,42,FALSE
+Belgium,Western Europe,48,56.99999999999999,FALSE
+Benin,Western Africa,37,81,FALSE
+Bolivia,South America,40,88,FALSE
+Bosnia and Herzegovina,Southern Europe,28.000000000000004,61,FALSE
+Botswana,Southern Africa,19,82,FALSE
+Brazil,South America,20,69,FALSE
+Bulgaria,Eastern Europe,30,53,FALSE
+Burkina Faso,Western Africa,24,80,FALSE
+Burundi,Eastern Africa,22,88,FALSE
+Cambodia,Southeast Asia,16,78,FALSE
+Cameroon,Central Africa,34,79,FALSE
+Canada,Northern America,56.99999999999999,76,FALSE
+Chad,Central Africa,27,61,FALSE
+Chile,South America,37,72,FALSE
+China,East Asia,30,72,FALSE
+Colombia,South America,31,84,FALSE
+Comoros,Eastern Africa,31,86,FALSE
+"Congo, Rep.",Central Africa,24,63,FALSE
+Costa Rica,Central America and Mexico,37,81,FALSE
+Croatia,Southern Europe,26,42,FALSE
+Cyprus,Southern Europe,41,80,FALSE
+Czech Republic,Eastern Europe,14.000000000000002,32,FALSE
+Denmark,Northern Europe,52,66,FALSE
+Dominican Republic,Central America and Mexico,38,90,FALSE
+Ecuador,South America,36,83,FALSE
+Egypt,North Africa,16,50,FALSE
+El Salvador,Central America and Mexico,28.000000000000004,78,FALSE
+Estonia,Northern Europe,48,57.99999999999999,FALSE
+Eswatini,Southern Africa,24,87,FALSE
+Ethiopia,Eastern Africa,23,84,FALSE
+Finland,Northern Europe,55.00000000000001,67,FALSE
+France,Western Europe,46,61,FALSE
+Gabon,Central Africa,25,75,FALSE
+Georgia,Central Asia,23,64,FALSE
+Germany,Western Europe,55.00000000000001,50,FALSE
+Ghana,Western Africa,21,64,FALSE
+Greece,Southern Europe,26,69,FALSE
+Guatemala,Central America and Mexico,30,86,FALSE
+Guinea,Western Africa,34,85,FALSE
+Haiti,Central America and Mexico,27,83,FALSE
+Honduras,Central America and Mexico,28.999999999999996,87,FALSE
+Hungary,Eastern Europe,37,52,FALSE
+Iceland,Northern Europe,56.00000000000001,83,FALSE
+India,South Asia,14.000000000000002,36,FALSE
+Indonesia,Southeast Asia,34,68,FALSE
+Iran,Middle East,44,84,FALSE
+Iraq,Middle East,35,69,FALSE
+Ireland,Northern Europe,48,70,FALSE
+Israel,Middle East,40,64,FALSE
+Italy,Southern Europe,55.00000000000001,73,FALSE
+Ivory Coast,Western Africa,23,71,FALSE
+Japan,East Asia,28.999999999999996,52,FALSE
+Jordan,Middle East,33,66,FALSE
+Kazakhstan,Central Asia,26,45,FALSE
+Kenya,Eastern Africa,40,86,FALSE
+Kosovo,Not assigned,34,86,FALSE
+Kuwait,Middle East,43,69,FALSE
+Kyrgyzstan,Central Asia,24,74,FALSE
+Laos,Southeast Asia,19,74,FALSE
+Latvia,Northern Europe,31,49,FALSE
+Lebanon,Middle East,32,49,FALSE
+Liberia,Western Africa,33,88,FALSE
+Libya,North Africa,34,86,FALSE
+Lithuania,Northern Europe,27,41,FALSE
+Luxembourg,Western Europe,50,64,FALSE
+Macedonia,Southern Europe,28.000000000000004,59,FALSE
+Madagascar,Eastern Africa,10,81,FALSE
+Malawi,Eastern Africa,20,81,FALSE
+Malaysia,Southeast Asia,27,47,FALSE
+Mali,Western Africa,32,86,FALSE
+Malta,Southern Europe,28.999999999999996,69,FALSE
+Mauritania,Western Africa,16,59,FALSE
+Mauritius,Eastern Africa,28.000000000000004,81,FALSE
+Mexico,Central America and Mexico,30,72,FALSE
+Moldova,Eastern Europe,27,71,FALSE
+Mongolia,East Asia,30,79,FALSE
+Montenegro,Southern Europe,31,64,FALSE
+Morocco,North Africa,26,79,FALSE
+Mozambique,Eastern Africa,32,89,FALSE
+Myanmar,Southeast Asia,7.000000000000001,66,FALSE
+Namibia,Southern Africa,28.999999999999996,71,FALSE
+Nepal,South Asia,21,74,FALSE
+Netherlands,Western Europe,42,48,FALSE
+New Zealand,Australia/New Zealand,46,57.99999999999999,FALSE
+Nicaragua,Central America and Mexico,31,68,FALSE
+Niger,Western Africa,25,83,FALSE
+Nigeria,Western Africa,23,80,FALSE
+Northern Cyprus,Not assigned,37,92,FALSE
+Norway,Northern Europe,59,75,FALSE
+Pakistan,South Asia,12,43,FALSE
+Palestine,Middle East,30,69,FALSE
+Panama,Central America and Mexico,28.000000000000004,72,FALSE
+Paraguay,South America,25,73,FALSE
+Peru,South America,36,90,FALSE
+Philippines,Southeast Asia,22,84,FALSE
+Poland,Eastern Europe,23,43,FALSE
+Portugal,Southern Europe,39,76,FALSE
+Romania,Eastern Europe,33,76,FALSE
+Russia,Eastern Europe,33,55.00000000000001,FALSE
+Rwanda,Eastern Africa,16,73,FALSE
+Saudi Arabia,Middle East,41,76,FALSE
+Senegal,Western Africa,24,77,FALSE
+Serbia,Southern Europe,37,60,FALSE
+Sierra Leone,Western Africa,22,80,FALSE
+Singapore,Southeast Asia,41,56.00000000000001,FALSE
+Slovakia,Eastern Europe,24,43,FALSE
+Slovenia,Southern Europe,40,60,FALSE
+South Africa,Southern Africa,25,79,FALSE
+South Korea,East Asia,35,63,FALSE
+Spain,Southern Europe,56.00000000000001,75,FALSE
+Sri Lanka,South Asia,23,75,FALSE
+Sweden,Northern Europe,57.99999999999999,71,FALSE
+Switzerland,Western Europe,51,50,FALSE
+Taiwan,East Asia,36,43,FALSE
+Tajikistan,Central Asia,41,82,FALSE
+Tanzania,Eastern Africa,16,86,FALSE
+Thailand,Southeast Asia,14.000000000000002,41,FALSE
+The Gambia,Western Africa,25,91,FALSE
+Togo,Western Africa,21,71,FALSE
+Tunisia,North Africa,28.000000000000004,69,FALSE
+Turkey,Middle East,37,87,FALSE
+Turkmenistan,Central Asia,9,51,FALSE
+Uganda,Eastern Africa,42,92,FALSE
+Ukraine,Eastern Europe,26,41,FALSE
+United Arab Emirates,Middle East,49,73,FALSE
+United Kingdom,Northern Europe,38,57.99999999999999,FALSE
+United States,Northern America,56.00000000000001,67,FALSE
+Uruguay,South America,39,72,FALSE
+Uzbekistan,Central Asia,36,87,FALSE
+Venezuela,South America,28.000000000000004,84,FALSE
+Vietnam,Southeast Asia,15,42,FALSE
+Yemen,Middle East,15,61,FALSE
+Zambia,Eastern Africa,30,87,FALSE
+Zimbabwe,Eastern Africa,24,86,FALSE
+World,World,31,69,TRUE
